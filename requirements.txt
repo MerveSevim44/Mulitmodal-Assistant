@@ -1,0 +1,79 @@
+# ============================================================
+# MULTIMODAL RAG SİSTEMİ — requirements.txt
+# Hafta 1 (RAG) + Hafta 2 (Ses & Görüntü) kütüphaneleri
+# ============================================================
+
+# --- TEMEL ÇERÇEVE ---
+langchain==0.3.25              # Ana RAG pipeline
+langchain-community==0.3.24    # Topluluk entegrasyonları (Ollama, ChromaDB vb.)
+langchain-core==0.3.59         # Temel soyutlamalar (Runnable, prompt vb.)
+# langchain-groq==0.1.10       # KALDIRILAN: Versiyon uyuşmazlığı (ayrı kurulacak)
+
+# --- VEKTÖR VERİTABANI (1. Hafta) ---
+chromadb==1.0.5                # Lokal vektör DB (ücretsiz, kalıcı)
+
+# --- EMBEDDING MODELİ (1. Hafta) ---
+sentence-transformers==4.1.0   # Metin → vektör (all-MiniLM-L6-v2, ücretsiz)
+langchain-huggingface==0.1.0   # Yeni HuggingFaceEmbeddings import
+
+# --- LLM BACKEND ---
+ollama==0.4.8                  # Lokal LLM çalıştırıcı (Llama3, Mistral, LLaVA)
+
+# --- SES → METİN / STT (2. Hafta) ---
+# transformers==4.51.3           # Distil-Whisper ve diğer HF modelleri (Week 2 için)
+torch==2.2.2                  # PyTorch - week1 RAG için sadece sentence-transformers
+torchvision==0.17.2            # Vision models (torch ile uyumlu versiyon)
+# torchaudio==2.6.0              # Ses işleme (Week 2 için)
+soundfile==0.12.1              # WAV / FLAC okuma
+librosa==0.10.2                # Ses ön işleme (sample rate dönüşümü)
+
+# --- GÖRÜNTÜ ANALİZİ (2. Hafta) ---
+Pillow==11.2.1                 # Görüntü okuma/dönüştürme (PIL)
+google-generativeai==0.8.5     # Gemini Flash API (ücretsiz tier)
+
+# --- BELGE İŞLEME ---
+pypdf==5.4.0                   # PDF okuma (ham metin çıkarma)
+pdfplumber==0.11.6             # PDF tablo çıkarma (daha güçlü)
+python-docx==1.1.2             # Word belgesi okuma
+openpyxl==3.1.5                # Excel okuma
+
+# --- MİKROFON / SES KAYDI (opsiyonel, gerçek zamanlı) ---
+SpeechRecognition==3.14.3      # Mikrofon arayüzü
+pyaudio==0.2.14                # Sistem sesi erişimi (mikrofon)
+
+# --- API & ORTAM ---
+python-dotenv==1.1.0           # .env dosyasından API key yükleme
+fastapi==0.115.9               # Web API (opsiyonel arayüz)
+uvicorn==0.34.2                # FastAPI sunucu
+
+# --- YARDIMCI ARAÇLAR ---
+huggingface-hub==0.30.2        # HF model indirme
+tqdm==4.67.1                   # İlerleme çubuğu
+numpy==2.2.5                   # Sayısal işlemler
+requests==2.32.3               # HTTP istekleri
+
+# ============================================================
+# KURULUM NOTLARI
+# ============================================================
+#
+# 1) CPU-only PyTorch (GPU yoksa, ~2GB küçük):
+#    pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+#
+# 2) GPU destekli PyTorch (NVIDIA, CUDA 12.1):
+#    pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+#
+# 3) Ollama ayrı kurulur (pip ile değil):
+#    https://ollama.com/download
+#    Sonra: ollama pull llama3.2
+#           ollama pull llava          (görüntü için)
+#           ollama pull mistral        (alternatif LLM)
+#
+# 4) Gemini API key almak için (ücretsiz):
+#    https://ai.google.dev/gemini-api
+#    .env dosyasına: GOOGLE_API_KEY=AIza...
+#
+# 5) pyaudio kurulumu Linux/Mac için ek paket gerektirir:
+#    Ubuntu: sudo apt-get install portaudio19-dev
+#    Mac:    brew install portaudio
+#
+# ============================================================
