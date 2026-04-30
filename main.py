@@ -93,7 +93,7 @@ def gecici_kaydet(dosya, isim):
     return yol
 
 def chromadan_yukle():
-    """ChromaDB'deki tüm ders ve konu bilgilerini çek"""
+    """ChromaDB'deki tüm ders ve konu bilgilerini çekiyor ve düzenli bir sözlük yapısında döndürüyor."""
     try:
         sonuclar = vektor_db.get(include=["metadatas", "ids"])
         dersler = {}
