@@ -1,0 +1,26 @@
+{
+  "ders_e7e3e62b": {
+    "id": "ders_e7e3e62b",
+    "ad": "işaret sistemleri",
+    "konular": {
+      "konu_56a388b7": {
+        "id": "konu_56a388b7",
+        "ad": "forier analizi"
+      },
+      "konu_85cf17d6": {
+        "id": "konu_85cf17d6",
+        "ad": "convulation"
+      }
+    }
+  },
+  "ders_4c31b58f": {
+    "id": "ders_4c31b58f",
+    "ad": "işletim sistemleri",
+    "konular": {
+      "konu_455a9b7b": {
+        "id": "konu_455a9b7b",
+        "ad": "Processes"
+      }
+    }
+  }
+}
