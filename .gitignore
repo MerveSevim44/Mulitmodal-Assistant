@@ -45,6 +45,7 @@ venv.bak/
 *.sqlite
 *.db
 chroma_db/
+data/
 
 # Model files and cache
 *.bin

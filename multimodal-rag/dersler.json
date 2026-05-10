@@ -6,10 +6,6 @@
       "konu_56a388b7": {
         "id": "konu_56a388b7",
         "ad": "forier analizi"
-      },
-      "konu_85cf17d6": {
-        "id": "konu_85cf17d6",
-        "ad": "convulation"
       }
     }
   },
@@ -20,6 +16,24 @@
       "konu_455a9b7b": {
         "id": "konu_455a9b7b",
         "ad": "Processes"
+      },
+      "konu_b6b648f3": {
+        "id": "konu_b6b648f3",
+        "ad": "cpu"
+      }
+    }
+  },
+  "ders_912f43de": {
+    "id": "ders_912f43de",
+    "ad": "IBM SkillBuilds",
+    "konular": {
+      "konu_e05778ee": {
+        "id": "konu_e05778ee",
+        "ad": "Generative AI introduction"
+      },
+      "konu_50a39c17": {
+        "id": "konu_50a39c17",
+        "ad": "Agient AI"
       }
     }
   }

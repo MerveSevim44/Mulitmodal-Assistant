@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import sys
 import uuid
+import json
 
 PROJE_KLASORU = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(PROJE_KLASORU, "multimodal-rag"))
@@ -33,26 +34,38 @@ section[data-testid="stSidebar"] {
     padding: 2rem;
 }
 .kart {
-    background: #13131f;
-    border: 1px solid #1e1e30;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 2px solid #6366f1;
     border-radius: 12px;
     padding: 20px;
     margin: 8px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    display: block;
+    width: 100%;
+    text-decoration: none;
 }
-.kart:hover { border-color: #6366f1; }
+.kart:hover { 
+    border-color: #818cf8;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+    transform: translateY(-2px);
+}
 .kart-adi {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
+    font-size: 16px;
     color: #e0e0ff;
     font-weight: 600;
+    margin: 0;
+    display: block;
 }
 .kart-meta {
-    font-size: 11px;
-    color: #6366f1;
-    margin-top: 6px;
+    font-size: 12px;
+    color: #818cf8;
+    margin-top: 8px;
+    display: block;
+    opacity: 0.9;
 }
 .ders-header {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -79,6 +92,53 @@ section[data-testid="stSidebar"] {
     color: #6366f1;
     margin-bottom: 16px;
 }
+button[kind="secondary"] {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    border: 2px solid #6366f1 !important;
+    border-radius: 12px !important;
+    color: #e0e0ff !important;
+    font-weight: 600 !important;
+    padding: 20px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15) !important;
+}
+button[kind="secondary"]:hover {
+    border-color: #818cf8 !important;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25) !important;
+    transform: translateY(-2px) !important;
+}
+[data-testid="stFileUploadDropzone"] {
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+}
+[data-testid="stFileUploadDropzone"] p {
+    font-size: 12px !important;
+    margin: 0 !important;
+}
+[data-testid="stFileUploadDropzone"] button {
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+    height: auto !important;
+}
+button {
+    font-size: 13px !important;
+    padding: 10px 16px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+}
+[data-testid="stSidebar"] button {
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+}
+button[kind="primary"], button[kind="secondary"] {
+    height: 44px !important;
+    min-height: 44px !important;
+}
+
+
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -187,14 +247,71 @@ def konu_sil(konu_id):
         st.error(f"Silme hatası: {e}")
         return 0
 
+# ── SOHBET FONKSIYONLARI ────────────────────────────────────────
+
+SOHBETLER_DOSYASI = os.path.join(PROJE_KLASORU, "multimodal-rag", "sohbetler.json")
+
+def sohbetleri_yukle():
+    """Tüm sohbetleri JSON dosyasından yükle"""
+    try:
+        if os.path.exists(SOHBETLER_DOSYASI):
+            with open(SOHBETLER_DOSYASI, "r", encoding="utf-8") as f:
+                return json.load(f)
+    except:
+        pass
+    return {}
+
+def sohbetleri_kaydet(sohbetler):
+    """Sohbetleri JSON dosyasına kaydet"""
+    try:
+        with open(SOHBETLER_DOSYASI, "w", encoding="utf-8") as f:
+            json.dump(sohbetler, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        st.error(f"Sohbet kaydetme hatası: {e}")
+
+def sohbet_yukle(ders_id, konu_id):
+    """Belirli ders-konu kombinasyonunun sohbetini yükle"""
+    sohbetler = sohbetleri_yukle()
+    mesaj_key = f"{ders_id}_{konu_id}"
+    return sohbetler.get(mesaj_key, [])
+
+def sohbet_kaydet(ders_id, konu_id, mesajlar):
+    """Belirli ders-konu kombinasyonunun sohbetini kaydet"""
+    sohbetler = sohbetleri_yukle()
+    mesaj_key = f"{ders_id}_{konu_id}"
+    sohbetler[mesaj_key] = mesajlar
+    sohbetleri_kaydet(sohbetler)
+
+def sohbet_sil(ders_id, konu_id):
+    """Belirli ders-konu kombinasyonunun sohbetini sil"""
+    sohbetler = sohbetleri_yukle()
+    mesaj_key = f"{ders_id}_{konu_id}"
+    if mesaj_key in sohbetler:
+        del sohbetler[mesaj_key]
+        sohbetleri_kaydet(sohbetler)
+
+def sohbetteki_kaynaklar_yukle(ders_id, konu_id):
+    """Sohbette kullanılan kaynakları yükle"""
+    mesajlar = sohbet_yukle(ders_id, konu_id)
+    kaynaklar = {"goruntu": None, "ses": None}
+    
+    # Sohbetteki son kaynakları bul
+    for mesaj in reversed(mesajlar):
+        if not kaynaklar["goruntu"] and "goruntu" in mesaj:
+            kaynaklar["goruntu"] = mesaj.get("goruntu")
+        if not kaynaklar["ses"] and "ses" in mesaj:
+            kaynaklar["ses"] = mesaj.get("ses")
+        if kaynaklar["goruntu"] and kaynaklar["ses"]:
+            break
+    
+    return kaynaklar
+
 # ── SESSION STATE ───────────────────────────────────────────────
 
 if "aktif_ders_id" not in st.session_state:
     st.session_state.aktif_ders_id = None
 if "aktif_konu_id" not in st.session_state:
     st.session_state.aktif_konu_id = None
-if "mesajlar" not in st.session_state:
-    st.session_state.mesajlar = {}
 if "aktif_goruntu" not in st.session_state:
     st.session_state.aktif_goruntu = None
 if "aktif_ses" not in st.session_state:
@@ -260,7 +377,7 @@ with st.sidebar:
     for ders_id, ders_info in tum_dersler.items():
         ders_adi = ders_info.get("ad", ders_id)
         aktif = st.session_state.aktif_ders_id == ders_id
-        c1, c2 = st.columns([5, 1])
+        c1, c2 = st.columns([4.5, 0.8])
         with c1:
             if st.button(
                 f"{'▶ ' if aktif else ''}{ders_adi}",
@@ -273,7 +390,7 @@ with st.sidebar:
                 st.session_state.aktif_goruntu = None
                 st.rerun()
         with c2:
-            if st.button("🗑", key=f"sil_{ders_id}"):
+            if st.button("🗑", key=f"sil_{ders_id}", use_container_width=True):
                 st.session_state[f"onay_{ders_id}"] = True
                 st.rerun()
 
@@ -307,13 +424,10 @@ if st.session_state.aktif_ders_id is None:
             ders_adi = ders_info.get("ad", ders_id)
             konu_sayisi = len(ders_info.get("konular", {}))
             with cols[i % 3]:
-                st.markdown(f"""
-                <div class="kart">
-                    <div class="kart-adi">📚 {ders_adi}</div>
-                    <div class="kart-meta">{konu_sayisi} konu</div>
-                </div>
-                """, unsafe_allow_html=True)
-                if st.button("Aç", key=f"ana_{ders_id}", use_container_width=True):
+                if st.button(f"📚\n{ders_adi}\n{konu_sayisi} konu", 
+                            key=f"ana_{ders_id}", 
+                            use_container_width=True,
+                            help="Derse git"):
                     st.session_state.aktif_ders_id = ders_id
                     st.session_state.aktif_konu_id = None
                     st.rerun()
@@ -384,23 +498,23 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id is None:
             konu_adi = konu_info.get("ad", konu_id)
             pdf_say = len(konu_info.get("pdf", {}))
             ses_say = len(konu_info.get("ses", {}))
+            meta_text = ""
+            if pdf_say:
+                meta_text += f"📄 {pdf_say} "
+            if ses_say:
+                meta_text += f"🎤 {ses_say}"
+            
             with cols[i % 3]:
-                st.markdown(f"""
-                <div class="kart">
-                    <div class="kart-adi">📖 {konu_adi}</div>
-                    <div class="kart-meta">
-                        {"📄 " + str(pdf_say) if pdf_say else ""}
-                        {"🎤 " + str(ses_say) if ses_say else ""}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                c1, c2 = st.columns([4, 1])
-                with c1:
-                    if st.button("Aç", key=f"konu_{konu_id}", use_container_width=True):
+                col_btn, col_del = st.columns([5, 1])
+                with col_btn:
+                    if st.button(f"📖\n{konu_adi}\n{meta_text.strip()}", 
+                                key=f"konu_{konu_id}", 
+                                use_container_width=True,
+                                help="Konuyu aç"):
                         st.session_state.aktif_konu_id = konu_id
                         st.rerun()
-                with c2:
-                    if st.button("🗑", key=f"konu_sil_{konu_id}"):
+                with col_del:
+                    if st.button("🗑", key=f"konu_sil_{konu_id}", use_container_width=True):
                         konu_sil(konu_id)                    # ChromaDB'den sil
                         konu_sil_depo(ders_id, konu_id)      # JSON'dan sil
                         st.rerun()
@@ -425,15 +539,23 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
 
     col_geri1, col_geri2 = st.columns([1, 1])
     with col_geri1:
-        if st.button("← Derse Dön"):
+        if st.button("← Derse Dön", use_container_width=True):
             st.session_state.aktif_konu_id = None
             st.session_state.aktif_goruntu = None
             st.rerun()
     with col_geri2:
-        if st.button("🏠 Ana Sayfa"):
+        if st.button("🏠 Ana Sayfa", use_container_width=True):
             st.session_state.aktif_ders_id = None
             st.session_state.aktif_konu_id = None
             st.rerun()
+
+    with st.expander("✏️ Konu Adını Düzenle"):
+        yeni_konu_ad = st.text_input("Yeni ad", value=konu_adi, key="konu_ad_duzenle")
+        if st.button("Kaydet", key="konu_ad_kaydet") and yeni_konu_ad.strip() != konu_adi:
+            if konu_guncelle(ders_id, konu_id, yeni_konu_ad.strip()):
+                st.success("Güncellendi!")
+                st.rerun()
+    st.divider()
 
     st.markdown(f"""
     <div class="ders-header">
@@ -448,7 +570,7 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
         st.markdown('<div class="section-label">📄 PDF Ekle</div>', unsafe_allow_html=True)
         pdf_dosya = st.file_uploader("", type=["pdf"], key=f"pdf_{konu_id}", label_visibility="collapsed")
         if pdf_dosya:
-            if st.button("PDF'i Sisteme Ekle", use_container_width=True, key="pdf_ekle"):
+            if st.button("PDF Ekle", use_container_width=True, key="pdf_ekle"):
                 with st.spinner("PDF okunuyor..."):
                     yol = gecici_kaydet(pdf_dosya, pdf_dosya.name)
                     pdf_yukle(yol, ders_adi, ders_id, konu_adi, konu_id)
@@ -461,7 +583,7 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
         ses_dosya = st.file_uploader("", type=["mp4", "mp3", "wav", "m4a"],
                                       key=f"ses_{konu_id}", label_visibility="collapsed")
         if ses_dosya:
-            if st.button("Ses'i Sisteme Ekle", use_container_width=True, key="ses_ekle"):
+            if st.button("Ses Ekle", use_container_width=True, key="ses_ekle"):
                 with st.spinner("Ses metne çevriliyor..."):
                     yol = gecici_kaydet(ses_dosya, ses_dosya.name)
                     ses_yukle(yol, ders_adi, ders_id, konu_adi, konu_id)
@@ -478,7 +600,7 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
             yol = gecici_kaydet(goruntu_dosya, goruntu_dosya.name)
             st.session_state.aktif_goruntu = yol
             st.image(goruntu_dosya, caption="Aktif görüntü", use_container_width=True)
-            if st.button("Görüntüyü Sisteme Ekle", key="goruntu_ekle"):
+            if st.button("Görüntüyü Ekle", use_container_width=True, key="goruntu_ekle"):
                 with st.spinner("Görüntü analiz ediliyor..."):
                     goruntu_yukle(yol, ders_adi, ders_id, konu_adi, konu_id)
                 st.success("✅ Eklendi!")
@@ -491,10 +613,17 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
         st.markdown('<div class="section-label">💬 Asistanla Konuş</div>', unsafe_allow_html=True)
 
         mesaj_key = f"{ders_id}_{konu_id}"
-        if mesaj_key not in st.session_state.mesajlar:
-            st.session_state.mesajlar[mesaj_key] = []
+        # JSON'dan sohbeti yükle
+        mesajlar = sohbet_yukle(ders_id, konu_id)
+        
+        # Önceki sohbetteki kaynakları yükle
+        eski_kaynaklar = sohbetteki_kaynaklar_yukle(ders_id, konu_id)
+        if eski_kaynaklar["goruntu"] and os.path.exists(eski_kaynaklar["goruntu"]):
+            st.session_state.aktif_goruntu = eski_kaynaklar["goruntu"]
+        if eski_kaynaklar["ses"] and os.path.exists(eski_kaynaklar["ses"]):
+            st.session_state.aktif_ses = eski_kaynaklar["ses"]
 
-        for mesaj in st.session_state.mesajlar[mesaj_key]:
+        for mesaj in mesajlar:
             with st.chat_message(mesaj["rol"]):
                 st.markdown(mesaj["icerik"])
 
@@ -506,19 +635,41 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
             c1, c2 = st.columns(2)
             with c1:
                 if st.session_state.aktif_goruntu:
+                    st.caption("📸 Aktif Görüntü:")
+                    st.image(st.session_state.aktif_goruntu, use_container_width=True)
                     goruntu_kullan = st.checkbox("🖼️ Görüntüyü dahil et", value=False, key=f"g_{mesaj_key}")
-                    st.session_state[f"goruntu_kullan_{mesaj_key}"] = goruntu_kullan
             with c2:
                 if st.session_state.aktif_ses:
+                    st.caption("🔊 Aktif Ses:")
+                    ses_cache_key = f"ses_bytes_{st.session_state.aktif_ses}"
+                    if ses_cache_key not in st.session_state:
+                        try:
+                            with open(st.session_state.aktif_ses, "rb") as f:
+                                st.session_state[ses_cache_key] = f.read()
+                        except:
+                            st.session_state[ses_cache_key] = None
+                    if st.session_state[ses_cache_key]:
+                        ses_uzantisi = st.session_state.aktif_ses.split('.')[-1].lower()
+                        ses_format = f"audio/{ses_uzantisi}" if ses_uzantisi != "m4a" else "audio/mp4"
+                        st.audio(st.session_state[ses_cache_key], format=ses_format)
+                    else:
+                        st.info("Ses dosyası oynatılamadı")
                     ses_kullan = st.checkbox("🎤 Ses kaydını dahil et", value=False, key=f"s_{mesaj_key}")
-                    st.session_state[f"ses_kullan_{mesaj_key}"] = ses_kullan
 
-        soru = st.chat_input(f"{konu_adi} hakkında bir şey sor...")
+    soru = st.chat_input(f"{konu_adi} hakkında bir şey sor...")
 
-        if soru:
+    if soru:
             with st.chat_message("user"):
                 st.markdown(soru)
-            st.session_state.mesajlar[mesaj_key].append({"rol": "user", "icerik": soru})
+            
+            # Kullanıcı mesajını kaynakları ile birlikte JSON'a kaydet
+            kullanici_mesaj = {"rol": "user", "icerik": soru}
+            if goruntu_kullan and st.session_state.aktif_goruntu:
+                kullanici_mesaj["goruntu"] = st.session_state.aktif_goruntu
+            if ses_kullan and st.session_state.aktif_ses:
+                kullanici_mesaj["ses"] = st.session_state.aktif_ses
+            mesajlar.append(kullanici_mesaj)
+            sohbet_kaydet(ders_id, konu_id, mesajlar)
 
             with st.chat_message("assistant"):
                 with st.spinner("Düşünüyor..."):
@@ -534,9 +685,12 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
                     cevap = pipeline(girdi)
                 st.markdown(cevap)
 
-            st.session_state.mesajlar[mesaj_key].append({"rol": "assistant", "icerik": cevap})
+            # Asistan mesajını JSON'a kaydet
+            mesajlar.append({"rol": "assistant", "icerik": cevap})
+            sohbet_kaydet(ders_id, konu_id, mesajlar)
+            st.rerun()
 
-        if st.session_state.mesajlar.get(mesaj_key):
-            if st.button("🗑️ Sohbeti Temizle"):
-                st.session_state.mesajlar[mesaj_key] = []
+    if mesajlar:
+            if st.button("🗑️ Temizle", use_container_width=True):
+                sohbet_sil(ders_id, konu_id)
                 st.rerun()
