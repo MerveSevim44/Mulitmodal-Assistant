@@ -36,5 +36,15 @@
         "ad": "Agient AI"
       }
     }
+  },
+  "ders_9ff8faed": {
+    "id": "ders_9ff8faed",
+    "ad": "yazılım mühendisliği",
+    "konular": {
+      "konu_5d7500bf": {
+        "id": "konu_5d7500bf",
+        "ad": "Gereksinim çözümleme"
+      }
+    }
   }
 }

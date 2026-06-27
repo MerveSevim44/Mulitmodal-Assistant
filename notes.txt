@@ -1,0 +1,6 @@
+
+
+16/05/2026
+- en son prompt ve pipline değişikliği yapmıştım 
+piplinede retriever kısmında sıkıntı vardı dosaydan fonksiyonları kullanamdım 
+birde retriever dosaysında belge kaynak gibi bir fonksiyon yoktu claude eklememi istedi (incele claude )

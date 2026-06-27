@@ -8,66 +8,62 @@ from week2_multimodal.vision import goruntu_analiz
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
-
+from week1_rag.retriever import belge_getir, vektor_db
 load_dotenv()
 
 llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0,max_tokens=1000)
 prompt = ChatPromptTemplate.from_template("""
-Sen deneyimli ve sabırlı bir akademik öğretmensin. Öğrencine ders anlatır gibi, anlaşılır ve yapıcı bir üslupla cevap ver.
+<rol>
+Sen bir akademik öğretmen asistanısın. Öğrencinin sorularını verilen kaynaklara dayanarak yanıtlarsın.
+</rol>
 
-KAYNAK KURALLARI:
-- Sadece aşağıdaki bağlamdaki bilgileri kullan. Bağlamda olmayan hiçbir şeyi ekleme veya uydurma.
-- Bağlamdan gelen bilginin kaynağını her zaman belirt: (📄 PDF kaynağı) veya (🎤 Ses kaydı kaynağı) veya (🖼️ Görüntü kaynağı)
-- Ses kaydından gelen bilgilerde genel bir özet yap, tüm detayları sıralama. Kullanıcının sorduğu spesifik bilgiyi ön plana çıkar.
-- Ses kaydından çıkarım yaptıysan bunu açıkça belirt: "Ses kaydına göre..." veya "Ses kaydından anladığım kadarıyla..."
-- Kendi genel bilginle bir şey eklediysen mutlaka belirt: "Buna ek olarak (kendi bilgimden)..."
-- Her cümlenin sonuna kaynak etiketi eklemek ZORUNLUDUR. Etiketsiz hiçbir bilgi yazma.
-- Eğer bir paragrafta birden fazla cümle aynı kaynaktan geliyorsa, paragrafın sonuna tek etiket yeterlidir. 
-                                                  
-CEVAP FORMATI:
-Her bilgi bloğunun sonunda mutlaka şu etiketlerden birini kullan:
-  → (📄 PDF kaynağı)
-  → (🎤 Ses kaydı kaynağı)  
-  → (🖼️ Görüntü kaynağı)
-  → (💡 Kendi bilgimden — bağlamda bu bilgi yoktu)
+<kaynak_bloklari>
+Sana aşağıdaki kaynak blokları veriliyor. Her blok kendi etiketi ile başlıyor:
 
-CEVAP SONUNDA MUTLAKA şu özeti ekle:                                         
+[DERS BELGELERİ - PDF]
+{pdf_baglam}
+
+[SES KAYDI İÇERİĞİ]
+{ses_baglam}
+
+[GÖRÜNTÜ ANALİZİ]
+{goruntu_baglam}
+</kaynak_bloklari>
+
+<kesin_kurallar>
+1. KAYNAK KARISTIRMA: Her bilgiyi yalnızca geldiği bloktan al. PDF bloğundaki bilgiyi ses kaydından geliyormuş gibi gösterme, tam tersi de geçerli.
+
+2. UYDURMA YASAĞI: Hiçbir blokta olmayan bilgiyi kesinlikle yazma. Blokta yoksa "❌ Bu konuda kaynaklarda bilgi bulunamadı." yaz ve dur.
+
+3. TEKRAR YASAĞI: Aynı cümleyi veya fikri bir kereden fazla yazma. Yazdıktan sonra bir daha yazma.
+
+4. SES KAYDI KURALI: Ses kaydı metni ham ve gürültülü olabilir. Ham metni asla kopyalama. Anlamlı kısımları anla, temiz Türkçeyle 2-3 cümleyle özetle. Anlaşılmıyorsa: "⚠️ Ses kaydı bu konuda net bilgi içermiyor." yaz.
+
+5. FORMÜL KURALI: Formül sorulursa önce formülü yaz, sonra her terimi tek satırda açıkla.
+
+6. EKSİK BİLGİ KURALI: Blokta kısmi bilgi varsa: "⚠️ Kaynakta bu konuda eksik bilgi var: [bildiklerini yaz]. Kaynağı güncellemeni öneririm." yaz.
+</kesin_kurallar>
+
+<cevap_formati>
+Orta uzunlukta yaz — ne çok kısa ne çok uzun. Ayrıntılı ama öz ol.
+
+Cevabını şu yapıda ver:
+
+[Konuya kısa giriş cümlesi]
+
+[Açıklama — kaynak etiketleriyle]
+Her bilgi bloğunun sonuna kaynak etiketi ekle:
+→ (📄 PDF) veya (🎤 Ses kaydı) veya (🖼️ Görüntü)
+
+[Varsa örnek veya özet]
+
 ---
-📊 Kaynak Özeti:
-- PDF'den kullanılan bilgi: [evet/hayır]
-- Ses kaydından kullanılan bilgi: [evet/hayır]  
-- Görüntüden kullanılan bilgi: [evet/hayır]                                          
-- Kendi bilgimden ekleme: [evet/hayır]                         
+📊 Kullanılan kaynaklar: [PDF: ✓/✗] [Ses: ✓/✗] [Görüntü: ✓/✗]
+</cevap_formati>
 
-                                          
-SES KAYDI KURALLARI:
-- Ses kaydı metni gürültülü veya anlaşılmaz olabilir. 
-  Ham metni ASLA kullanıcıya gösterme.
-- Önce metni anlamlandır, sonra kendi cümlelerinle özetle.
-- Anlaşılmayan kısımları atla, anlaşılan kısımları temiz Türkçeyle yaz.
-- Ses kaydından sadece 1 paragraf özet yaz, tekrar etme.
-- Eğer ses kaydı tamamen anlaşılmazsa: 
-  "⚠️ Ses kaydı kalitesi düşük, anlamlı bilgi çıkarılamadı." de.
-                                          
-FORMÜL KURALLARI:
-- Formüller veya matematiksel ifadeler sorulduğunda önce formülü açıkça yaz, sonra her terimi tek tek açıkla.
-- Örnek: "f(x) = 2x + 3 formülünde: f(x) çıktıyı, x girdiyi, 2 eğimi, 3 ise y-eksenini kestiği noktayı temsil eder."
-
-EKSİK BİLGİ KURALLARI:
-- Bağlamda bilgi eksik, karışık veya anlaşılmaz ise şunu söyle: "⚠️ Bu konuda kaynakta eksik/anlaşılmaz bilgi var. Şu kadarını anlayabildim: [bilgi]. Daha iyi bir sonuç için kaynağı güncellemeni öneririm."
-- Bağlamda bilgi yetersizse kesinlikle tahmin yürütme.
-- Boşlukları kendi bilginle doldurma. ❌ ile bitir.
-- Bağlamda hiç bilgi yoksa: "❌ Bu konuda kaynaklarda bilgi bulunamadı." de, uydurma.
-
-ANLATIM KURALLARI:
-- Öğretmen gibi anlat: önce konuyu giriş cümlesiyle tanıt, sonra açıkla, gerekirse örnek ver.
-- Gereksiz tekrar yapma, özlü ve net ol.
-- Türkçe teknik terimleri açıklarken parantez içinde orijinal terimi de yaz. Örnek: "bağlam penceresi (context window)"
-
-Bağlam:
-{context}
-
-Öğrencinin sorusu: {question}
+<soru>
+{question}
+</soru>
 """)
 
 def kaynak_belirle(soru: str) -> str:
@@ -82,31 +78,70 @@ def kaynak_belirle(soru: str) -> str:
         return "goruntu"
     else:
         return None  # filtre yok, hepsine bak
+    
+
+def belge_getir_kaynak(soru: str, ders_id: str = None, konu_id: str = None, kaynak: str = None) -> str:
+    """Belirli bir kaynak tipine göre belge getir"""
+    kosullar = []
+    if konu_id:
+        kosullar.append({"konu_id": konu_id})
+    elif ders_id:
+        kosullar.append({"ders_id": ders_id})
+    if kaynak:
+        kosullar.append({"kaynak": kaynak})
+
+    # ChromaDB: birden fazla koşul $and ile sarmalanmalı, tek koşul direkt verilir
+    if len(kosullar) > 1:
+        filtre = {"$and": kosullar}
+    elif len(kosullar) == 1:
+        filtre = kosullar[0]
+    else:
+        filtre = None
+
+    if filtre:
+        docs = vektor_db.similarity_search(soru, k=3, filter=filtre)
+    else:
+        docs = belge_getir(soru)
+
+    if not docs:
+        return ""
+
+    return "\n\n".join(doc.page_content for doc in docs)
 
 def pipeline(girdi: dict) -> str:
-    goruntu_icerigi = ""
+    goruntu_baglam = "Bu sorgu için görüntü analizi yapılmadı."
+    ses_baglam = "Bu sorgu için ses kaydı analizi yapılmadı."
 
     if "goruntu" in girdi:
         print("Görüntü anlık analiz ediliyor...")
-        goruntu_icerigi = goruntu_analiz(girdi["goruntu"])
+        goruntu_baglam = goruntu_analiz(girdi["goruntu"])
 
     soru = girdi.get("soru", "")
     ders_id = girdi.get("ders_id", None)
-    konu_id = girdi.get("konu_id", None)  # ← ekle
-
+    konu_id = girdi.get("konu_id", None)
     kaynak = kaynak_belirle(soru)
+
     print(f"Ders ID: {ders_id} | Konu ID: {konu_id} | Kaynak: {kaynak}")
 
-    baglam = belge_getir(soru, ders_id=ders_id, konu_id=konu_id, kaynak=kaynak)
+    # PDF ve ses chunk'larını ayrı ayrı getir
+    pdf_docs = belge_getir_kaynak(soru, ders_id=ders_id, konu_id=konu_id, kaynak="pdf_dokuman")
+    ses_docs = belge_getir_kaynak(soru, ders_id=ders_id, konu_id=konu_id, kaynak="ses_kaydi")
 
-    if goruntu_icerigi:
-        tam_baglam = f"--- GÖRÜNTÜ ANALİZİ ---\n{goruntu_icerigi}\n\n--- DERS BELGELERİ ---\n{baglam}"
+    if pdf_docs:
+        pdf_baglam = pdf_docs
     else:
-        tam_baglam = f"--- DERS BELGELERİ ---\n{baglam}"
+        pdf_baglam = "Bu konuda PDF kaynağında bilgi bulunamadı."
+
+    if ses_docs:
+        ses_baglam = ses_docs
+    else:
+        ses_baglam = "Bu konuda ses kaydında bilgi bulunamadı."
 
     chain = prompt | llm
     cevap = chain.invoke({
-        "context": tam_baglam,
+        "pdf_baglam": pdf_baglam,
+        "ses_baglam": ses_baglam,
+        "goruntu_baglam": goruntu_baglam,
         "question": soru
     })
 

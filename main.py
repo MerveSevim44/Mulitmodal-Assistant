@@ -638,23 +638,8 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
                     st.caption("📸 Aktif Görüntü:")
                     st.image(st.session_state.aktif_goruntu, use_container_width=True)
                     goruntu_kullan = st.checkbox("🖼️ Görüntüyü dahil et", value=False, key=f"g_{mesaj_key}")
-            with c2:
-                if st.session_state.aktif_ses:
-                    st.caption("🔊 Aktif Ses:")
-                    ses_cache_key = f"ses_bytes_{st.session_state.aktif_ses}"
-                    if ses_cache_key not in st.session_state:
-                        try:
-                            with open(st.session_state.aktif_ses, "rb") as f:
-                                st.session_state[ses_cache_key] = f.read()
-                        except:
-                            st.session_state[ses_cache_key] = None
-                    if st.session_state[ses_cache_key]:
-                        ses_uzantisi = st.session_state.aktif_ses.split('.')[-1].lower()
-                        ses_format = f"audio/{ses_uzantisi}" if ses_uzantisi != "m4a" else "audio/mp4"
-                        st.audio(st.session_state[ses_cache_key], format=ses_format)
-                    else:
-                        st.info("Ses dosyası oynatılamadı")
-                    ses_kullan = st.checkbox("🎤 Ses kaydını dahil et", value=False, key=f"s_{mesaj_key}")
+            with c2:        
+             ses_kullan = st.checkbox("🎤 Ses kaydını dahil et", value=False, key=f"s_{mesaj_key}")         
 
     soru = st.chat_input(f"{konu_adi} hakkında bir şey sor...")
 
