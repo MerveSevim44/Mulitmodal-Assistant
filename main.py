@@ -534,6 +534,19 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
     konu_info = tum_konular.get(konu_id, {})
     konu_adi = konu_info.get("ad", konu_id)
 
+    # Konu DEĞİŞTİĞİNDE panel kaynaklarını sıfırla ve yalnızca bu konunun
+    # geçmişinden geri yükle. Her rerun'da değil; aksi halde yeni yüklenen
+    # görseli eski görselle ezer (clobber) ve konular arası sızma olur.
+    if st.session_state.get("_panel_konu_id") != konu_id:
+        st.session_state._panel_konu_id = konu_id
+        st.session_state.aktif_goruntu = None
+        st.session_state.aktif_ses = None
+        eski_kaynaklar = sohbetteki_kaynaklar_yukle(ders_id, konu_id)
+        if eski_kaynaklar["goruntu"] and os.path.exists(eski_kaynaklar["goruntu"]):
+            st.session_state.aktif_goruntu = eski_kaynaklar["goruntu"]
+        if eski_kaynaklar["ses"] and os.path.exists(eski_kaynaklar["ses"]):
+            st.session_state.aktif_ses = eski_kaynaklar["ses"]
+
     # Breadcrumb
     st.markdown(f'<div class="breadcrumb">📚 {ders_adi} → 📖 {konu_adi}</div>', unsafe_allow_html=True)
 
@@ -542,11 +555,13 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
         if st.button("← Derse Dön", use_container_width=True):
             st.session_state.aktif_konu_id = None
             st.session_state.aktif_goruntu = None
+            st.session_state._panel_konu_id = None
             st.rerun()
     with col_geri2:
         if st.button("🏠 Ana Sayfa", use_container_width=True):
             st.session_state.aktif_ders_id = None
             st.session_state.aktif_konu_id = None
+            st.session_state._panel_konu_id = None
             st.rerun()
 
     with st.expander("✏️ Konu Adını Düzenle"):
@@ -597,8 +612,16 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
         goruntu_dosya = st.file_uploader("", type=["png", "jpg", "jpeg"],
                                           key=f"goruntu_{konu_id}", label_visibility="collapsed")
         if goruntu_dosya:
-            yol = gecici_kaydet(goruntu_dosya, goruntu_dosya.name)
-            st.session_state.aktif_goruntu = yol
+            id_key = f"son_goruntu_id_{konu_id}"
+            yol_key = f"goruntu_yol_{konu_id}"
+            # Dosyayı yalnızca YENİ seçildiğinde (file_id değişince) işle.
+            # Böylece rerun'larda aktif_goruntu koşulsuz yeniden set edilmez;
+            # "Kaldır" kalıcı olur ve yeni görsel panele anında yansır.
+            if st.session_state.get(id_key) != goruntu_dosya.file_id:
+                st.session_state[yol_key] = gecici_kaydet(goruntu_dosya, goruntu_dosya.name)
+                st.session_state[id_key] = goruntu_dosya.file_id
+                st.session_state.aktif_goruntu = st.session_state[yol_key]
+            yol = st.session_state[yol_key]
             st.image(goruntu_dosya, caption="Aktif görüntü", use_container_width=True)
             if st.button("Görüntüyü Ekle", use_container_width=True, key="goruntu_ekle"):
                 with st.spinner("Görüntü analiz ediliyor..."):
@@ -615,13 +638,6 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
         mesaj_key = f"{ders_id}_{konu_id}"
         # JSON'dan sohbeti yükle
         mesajlar = sohbet_yukle(ders_id, konu_id)
-        
-        # Önceki sohbetteki kaynakları yükle
-        eski_kaynaklar = sohbetteki_kaynaklar_yukle(ders_id, konu_id)
-        if eski_kaynaklar["goruntu"] and os.path.exists(eski_kaynaklar["goruntu"]):
-            st.session_state.aktif_goruntu = eski_kaynaklar["goruntu"]
-        if eski_kaynaklar["ses"] and os.path.exists(eski_kaynaklar["ses"]):
-            st.session_state.aktif_ses = eski_kaynaklar["ses"]
 
         for mesaj in mesajlar:
             with st.chat_message(mesaj["rol"]):
@@ -667,7 +683,17 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
                         girdi["goruntu"] = st.session_state.aktif_goruntu
                     if ses_kullan and st.session_state.aktif_ses:
                         girdi["ses"] = st.session_state.aktif_ses
-                    cevap = pipeline(girdi)
+
+                    # Konuşma geçmişi konu bazlı; rerun'larda korunur, konular sızmaz.
+                    gecmis_key = f"gecmis_{konu_id}"
+                    if gecmis_key not in st.session_state:
+                        st.session_state[gecmis_key] = []
+                    gecmis = st.session_state[gecmis_key]
+
+                    # Liste mutable: pipeline içinde bu tur append edilir.
+                    cevap = pipeline(girdi, gecmis)
+                    # Emin olmak için aynı listeyi session_state'e geri yaz.
+                    st.session_state[gecmis_key] = gecmis
                 st.markdown(cevap)
 
             # Asistan mesajını JSON'a kaydet
@@ -678,4 +704,5 @@ elif st.session_state.aktif_ders_id and st.session_state.aktif_konu_id:
     if mesajlar:
             if st.button("🗑️ Temizle", use_container_width=True):
                 sohbet_sil(ders_id, konu_id)
+                st.session_state[f"gecmis_{konu_id}"] = []
                 st.rerun()

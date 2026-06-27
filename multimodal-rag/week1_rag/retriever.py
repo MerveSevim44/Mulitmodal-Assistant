@@ -15,7 +15,7 @@ vektor_db = Chroma(
     embedding_function=embeddings
 )
 
-retriever = vektor_db.as_retriever(search_kwargs={"k": 3})
+retriever = vektor_db.as_retriever(search_kwargs={"k": 6})
 def belge_getir(soru: str, ders_id: str = None, konu_id: str = None, kaynak: str = None) -> str:
     
     filtre_kosullari = []

@@ -11,15 +11,18 @@ from dotenv import load_dotenv
 from week1_rag.retriever import belge_getir, vektor_db
 load_dotenv()
 
-llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0,max_tokens=1000)
+llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0,max_tokens=1000)
 prompt = ChatPromptTemplate.from_template("""
 <rol>
-Sen bir akademik öğretmen asistanısın. Öğrencinin sorularını verilen kaynaklara dayanarak yanıtlarsın.
+Sen bir akademik öğretmen asistanısın. Görevin, öğrencinin sorusunu YALNIZCA aşağıdaki kaynak bloklarına dayanarak yanıtlamak. Kaynak dışına çıkmazsın.
 </rol>
 
-<kaynak_bloklari>
-Sana aşağıdaki kaynak blokları veriliyor. Her blok kendi etiketi ile başlıyor:
+<konusma_gecmisi>
+Aşağıda önceki konuşma var. Öğrencinin yeni sorusu "bunu", "peki ya", "neden öyle" gibi önceki cevaba atıfsa, bağlamı buradan çöz. Geçmiş boşsa yok say.
+{history}
+</konusma_gecmisi>
 
+<kaynak_bloklari>
 [DERS BELGELERİ - PDF]
 {pdf_baglam}
 
@@ -30,30 +33,30 @@ Sana aşağıdaki kaynak blokları veriliyor. Her blok kendi etiketi ile başlı
 {goruntu_baglam}
 </kaynak_bloklari>
 
+<once_dusun>
+Cevap yazmadan önce kendine sor (bunları YAZMA, sadece düşün):
+- Öğrenci tek bir spesifik şey mi soruyor, yoksa konunun genel özetini mi istiyor?
+- Cevap hangi blokta? Birden fazla blokta mı? Hiçbirinde yoksa uydurma.
+- Genel soruysa: ilgili bloktaki TÜM parçaları birleştirip bütüncül bir cevap kur, tek bir cümleye yapışma.
+- Spesifik soruysa: sadece sorulan noktaya odaklan, fazlasını ekleme.
+</once_dusun>
+
 <kesin_kurallar>
-1. KAYNAK KARISTIRMA: Her bilgiyi yalnızca geldiği bloktan al. PDF bloğundaki bilgiyi ses kaydından geliyormuş gibi gösterme, tam tersi de geçerli.
-
-2. UYDURMA YASAĞI: Hiçbir blokta olmayan bilgiyi kesinlikle yazma. Blokta yoksa "❌ Bu konuda kaynaklarda bilgi bulunamadı." yaz ve dur.
-
-3. TEKRAR YASAĞI: Aynı cümleyi veya fikri bir kereden fazla yazma. Yazdıktan sonra bir daha yazma.
-
-4. SES KAYDI KURALI: Ses kaydı metni ham ve gürültülü olabilir. Ham metni asla kopyalama. Anlamlı kısımları anla, temiz Türkçeyle 2-3 cümleyle özetle. Anlaşılmıyorsa: "⚠️ Ses kaydı bu konuda net bilgi içermiyor." yaz.
-
-5. FORMÜL KURALI: Formül sorulursa önce formülü yaz, sonra her terimi tek satırda açıkla.
-
-6. EKSİK BİLGİ KURALI: Blokta kısmi bilgi varsa: "⚠️ Kaynakta bu konuda eksik bilgi var: [bildiklerini yaz]. Kaynağı güncellemeni öneririm." yaz.
+1. TOPRAKLAMA: Her cümlenin dayanağı bir blokta olmalı. Blokta yoksa yazma. Genel kültüründen, tahminden ya da "muhtemelen"den asla bilgi ekleme.
+2. KAYNAK KARIŞTIRMA YOK: Her bilgiyi yalnızca geldiği bloktan al ve etiketle. PDF bilgisini ses kaydından geliyormuş gibi gösterme.
+3. UYDURMA YASAĞI: Hiçbir blokta olmayan bilgi için "❌ Bu konuda kaynaklarda bilgi bulunamadı." yaz ve dur. Bilgi yoksa boşluğu doldurma.
+4. TEKRAR YASAĞI: Aynı fikri/cümleyi iki kez yazma.
+5. SES KAYDI: Ham ve gürültülü olabilir. Kopyalama; anlamlı kısmı 2-3 cümleyle temiz Türkçeyle özetle. Anlaşılmıyorsa "⚠️ Ses kaydı bu konuda net bilgi içermiyor." yaz.
+6. FORMÜL: Önce formülü yaz, sonra her terimi tek satırda açıkla.
+7. EKSİK BİLGİ: Blokta kısmi bilgi varsa "⚠️ Kaynakta eksik bilgi var: [bildiklerin]. Kaynağı güncellemeni öneririm." yaz — ama elindeki kısmı tam ver.
 </kesin_kurallar>
 
 <cevap_formati>
-Orta uzunlukta yaz — ne çok kısa ne çok uzun. Ayrıntılı ama öz ol.
+Orta uzunluk. Spesifik soruda kısa ve nokta atışı; genel soruda kapsayıcı ama özlü.
 
-Cevabını şu yapıda ver:
+[Konuya kısa giriş]
 
-[Konuya kısa giriş cümlesi]
-
-[Açıklama — kaynak etiketleriyle]
-Her bilgi bloğunun sonuna kaynak etiketi ekle:
-→ (📄 PDF) veya (🎤 Ses kaydı) veya (🖼️ Görüntü)
+[Açıklama — her bilgi bloğunun sonuna etiket: → (📄 PDF) / (🎤 Ses kaydı) / (🖼️ Görüntü)]
 
 [Varsa örnek veya özet]
 
@@ -108,7 +111,8 @@ def belge_getir_kaynak(soru: str, ders_id: str = None, konu_id: str = None, kayn
 
     return "\n\n".join(doc.page_content for doc in docs)
 
-def pipeline(girdi: dict) -> str:
+def pipeline(girdi: dict, gecmis: list = None) -> str:
+    gecmis = gecmis or []
     goruntu_baglam = "Bu sorgu için görüntü analizi yapılmadı."
     ses_baglam = "Bu sorgu için ses kaydı analizi yapılmadı."
 
@@ -139,11 +143,19 @@ def pipeline(girdi: dict) -> str:
 
     chain = prompt | llm
     cevap = chain.invoke({
+        # Son 3 tur (6 satır) prompt'a girsin; tüm geçmiş çağıran tarafta kalır.
+        # gecmis boşken "".join([]) == "" → {history} boş gider, KeyError olmaz.
+        "history": "\n".join(gecmis[-6:]),
         "pdf_baglam": pdf_baglam,
         "ses_baglam": ses_baglam,
         "goruntu_baglam": goruntu_baglam,
         "question": soru
     })
+
+    # Bu turu geçmişe ekle (liste mutable; çağıran taraftaki session_state listesi
+    # de aynı nesne olduğundan otomatik güncellenir).
+    gecmis.append(f"Öğrenci: {soru}")
+    gecmis.append(f"Asistan: {cevap.content}")
 
     return cevap.content
 

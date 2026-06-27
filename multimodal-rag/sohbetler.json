@@ -385,5 +385,82 @@
       "rol": "assistant",
       "icerik": "[Konuya kısa giriş cümlesi]\nGörsele göre kurallar, bir tasarım sürecinde kullanılan kuralların bir parçası olarak tanımlanabilir.\n\n[Açıklama — kaynak etiketleriyle]\nGörsele göre kurallar, tasarım sürecinde kullanılan kuralların bir parçası olarak tanımlanabilir. Bu kurallar, tasarım sürecinde kullanılan görsellerin ve grafiklerin kurallarına göre belirlenir. Örneğin, bir logo tasarımında kullanılan kurallar, logo'nun renkleri, şekilleri ve boyutları ile ilgili olabilir. Bu kurallar, tasarım sürecinde kullanılan görsellerin ve grafiklerin kurallarına göre belirlenir.\n\nVarsa örnek veya özet:\nÖrnek olarak, bir marka için kullanılan kurallar, marka logosunda kullanılan renklerin ve şekillerin kurallarına göre belirlenir. Bu kurallar, marka kimliği ve marka değerini korumak için önemlidir.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ❌] [Görüntü: ❌]"
     }
+  ],
+  "ders_2a414319_konu_c4d7e9a9": [
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-27 003204.png"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-27 003204.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin içeriği**\n\nBu görsel, veri akış diyagramı (VAD) kurallarını gösteren **“VAD Kuralları”** başlıklı bir tablo içerir. Tablo üç sütundan oluşur: **Kural**, **Yanlış** ve **Doğru** → (🖼️ Görüntü).  \n\n1. **Kural 1:** “Bir işlemden farklı iki işleme gidecek olan aynı veri, aynı yönde iki ucu açık okla gösterilmelidir.”  \n   - **Yanlış örnek:** 0.0 İşlem → 2.0 İşlem ve 0.0 İşlem → 3.0 İşlem oklarla gösterilmemiş → (🖼️ Görüntü).  \n   - **Doğru örnek:** Aynı iki işlem arasında veri akışı oklarıyla gösterilmiş → (🖼️ Görüntü).  \n\n2. **Kural 2:** “Veri hiçbir işlemden geçmeden çıktığı işleme doğrudan dönmez.”  \n   - **Yanlış örnek:** 0.0 İşlem → 1.0 İşlem → 0.0 İşlem (veri doğrudan dönüyor) → (🖼️ Görüntü).  \n   - **Doğru örnek:** 1.0 İşlem → 3.0 İşlem (doğrudan dönüş yok) → (🖼️ Görüntü).  \n\n3. **Kural 3:** “Veri akış okları üzerinde gösterilen veri, sadece isim formatında olmalıdır.”  \n   - **Yanlış örnek:** “Siparişi Doğula”, “Zaman Çizelgesini Tamamla” → (🖼️ Görüntü).  \n   - **Doğru örnek:** “Doğrulanmış Sipariş”, “Tamamlanmış Zaman Çizelgesi” → (🖼️ Görüntü).  \n\nTablonun altında, **düğümler (İşlem)** olarak 0.0, 1.0, 2.0, 3.0 numaralı işlemler, **oklar** veri akışı okları ve **bağlantılar** bu işlemler arasındaki veri akışını gösterir → (🖼️ Görüntü). Ayrıca oklar üzerindeki etiketler “Siparişi Doğula”, “Zaman Çizelgesini Tamamla”, “Doğrulanmış Sipariş”, “Tamamlanmış Zaman Çizelgesi” olarak listelenmiştir → (🖼️ Görüntü).  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin İçeriği**\n\nBu görsel, bir **Binary Search Tree (İkili Arama Ağacı)** diyagramını göstermektedir. → (🖼️ Görüntü)  \nDüğümler kutular halinde sunulmuş; her birinin içinde bir **key (anahtar)** değeri ve sol‑sağ çocuk referansları bulunur. → (🖼️ Görüntü)  \nKök düğümün değeri **6**dır; sol çocuğu **4**, sağ çocuğu **8** olarak etiketlenmiştir. → (🖼️ Görüntü)  \nDiğer düğüm değerleri **2, 5, 7, 9** şeklinde gösterilmiştir. → (🖼️ Görüntü)  \n\n**İkili Arama Ağacı Kuralları (görselde belirtilen)**  \n- Sol alt ağaçtaki tüm düğümler, kök düğümün değerinden küçüktür. → (🖼️ Görüntü)  \n- Sağ alt ağaçtaki tüm düğümler, kök düğümün değerinden büyüktür. → (🖼️ Görüntü)  \n- Her alt ağaç da aynı BST özelliklerini taşır. → (🖼️ Görüntü)  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "VAD Kuralları tablosunda kaç sütun vardı ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "❌ Bu konuda kaynaklarda bilgi bulunamadı.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde peki linked list mi kullanıldı ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görseldeki sistem mimarisi hakkında**\n\nGörsel, GSM ağı bileşenlerini (Data, EIR, MSC, VLR, HLR, AUC vb.) ve aralarındaki veri akışını gösteren bir diyagramdır; içinde linked list (bağlı liste) kullanımına dair herhangi bir ibare yer almamaktadır. → (🖼️ Görüntü)\n\n⚠️ **Kaynakta eksik bilgi var:** Görselde linked list kullanımına dair bilgi bulunmamaktadır. Kaynağı güncellemenizi öneririm.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var peki",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin içeriği**\n\nBu görsel, düğümler ve oklarla gösterilen bir **ağaç veri yapısını** tasvir etmektedir → (🖼️ Görüntü). Görseldeki ağaç, kök düğümü **10** olan, her düğümün iki çocuğu olabilen bir **ikili ağaç (Binary Tree)** şeklinde düzenlenmiştir → (🖼️ Görüntü). Kök düğümün sol çocuğu **5**, sağ çocuğu ise **15** olarak gösterilmiştir → (🖼️ Görüntü). \n\n- **5** düğümünün sol çocuğu **3**, sağ çocuğu **7** olarak yer alır → (🖼️ Görüntü).  \n- **15** düğümünün sol çocuğu **12**, sağ çocuğu **20** olarak bulunur → (🖼️ Görüntü).  \n\nBu yapı, değerlerin sol alt dallarda daha küçük, sağ alt dallarda daha büyük olduğu bir **ikili arama ağacı (Binary Search Tree - BST)** özelliği taşıdığı izlenimini verir → (🖼️ Görüntü).\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var peki",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    }
+  ],
+  "ders_912f43de_konu_eb536b27": [
+    {
+      "rol": "user",
+      "icerik": "bu görsel bir linked list yapısı mı inceler misin ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin veri yapısı incelemesi**\n\nGörseldeki diyagram, `1380`, `1391`, `1392`, `1394`, `1396` ve `1397` gibi düğümler ve bu düğümler arasındaki “head”, “bat”, “frog” etiketli bağlantılardan oluşan bir veri yapısını göstermektedir. Bu etiketler, düğümler arasındaki ilişkileri tanımlayan yönlendirilmiş kenarlar gibi yorumlanabilir. Ancak kaynakta bu yapının **linked list** (bağlı liste) olduğu yönünde bir ifade bulunmamaktadır; yalnızca bir **graf** ya da **şablon** olduğu belirtilmiştir. → (🖼️ Görüntü)\n\n**Sonuç**  \nKaynakta görselin bir linked list olduğu bilgisi yer almadığından, bu diyagramın bir linked list yapısı olduğunu söylemek mümkün değildir; daha çok etiketli kenarlarla tanımlanan bir grafik olarak tanımlanmıştır.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "head neye gidiyor görselde ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselde “Head” öğesinin bağlantıları**\n\nGörseldeki veri dizisi diyagramına göre **Head (1390)** doğrudan üç alt öğeye bağlanmıştır:\n\n- **Bat (218)**\n- **Tail (1096)**\n- **Num (207)**  \n\nBu üç öğe, Head’in yönlendirdiği (gittiği) noktalar olarak gösterilmiştir. → (🖼️ Görüntü)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    }
   ]
 }
