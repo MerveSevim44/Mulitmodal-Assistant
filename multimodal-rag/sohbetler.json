@@ -762,5 +762,95 @@
       "rol": "assistant",
       "icerik": "**İlişki hakkında bilgi**\n\nVerilen kaynaklarda VAD simgeleri, E‑R diyagramı ve karar ağacı (burs koşulları) ayrı ayrı tanımlanmıştır, ancak bu iki içerik arasında doğrudan bir bağlantı ya da ilişkiye dair bir açıklama bulunmamaktadır.  \n\n❌ **Bu konuda kaynaklarda bilgi bulunamadı.** → (📄 PDF) → (🖼️ Görüntü)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
     }
+  ],
+  "ders_2a414319_konu_b34e1ce4": [
+    {
+      "rol": "user",
+      "icerik": "bu pdf ten ne öğrenebilirim "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**PDF’den öğrenebilecek temel konular**\n\n- **Şirket veritabanı için E‑R (Varlık‑İlişki) diyagramı öğeleri**  \n  - Varlık, nitelik, bileşik nitelik, zayıf varlık, türemiş nitelik, anahtar nitelik, bağ, çok değerli nitelik gibi kavramlar tanımlanmıştır. → (📄 PDF)\n\n- **Veri Akış Diyagramı (VAD) simgeleri**  \n  - Dış varlık, işlem (süreç), veri akışı, veri deposu gibi sembollerin anlamları ve örnekleri verilmiştir (ör. “Öğrenci” dış varlık, “Veri deposu”). → (📄 PDF)\n\n- **Yapısal çözümleme ve modelleme yöntemleri**  \n  - Veri Akış Diyagramı (VAD), davranış modellemesi (durum geçiş diyagramları vb.), veri sözlüğü, karar tabloları ve Varlık‑İlişki Diyagramları gibi tekniklerin listesi sunulmuştur. → (📄 PDF)\n\nBu bilgiler, bir şirketin bilgi sistemini tasarlarken kullanılan temel veri modelleme kavramlarını ve diyagramlama tekniklerini anlamanıza yardımcı olur.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": " E‑R (Varlık‑İlişki) diyagramı öğeleri dedin peki bu ögeler nelerdir "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**E‑R (Varlık‑İlişki) diyagramı öğeleri**\n\nE‑R diyagramı, veri tabanı tasarımında veri nesneleri ve aralarındaki ilişkileri görsel olarak ifade eder. PDF kaynağında bu diyagramı oluşturan temel öğeler aşağıdaki gibi tanımlanmıştır:\n\n- **Varlık (Entity)** – Diktörgen ile gösterilir. → (📄 PDF)  \n- **Zayıf Varlık (Weak Entity)** – Çift taraflı diktörtgen ile gösterilir. → (📄 PDF)  \n- **İlişki (Relationship)** – Eşkenar dörtgen (elmas) ile gösterilir. → (📄 PDF)  \n- **Nitelik (Attribute)** – Elips ile gösterilir. → (📄 PDF)  \n- **Bileşik Nitelik (Composite Attribute)** – Birden fazla alt niteliği olan nitelik. → (📄 PDF)  \n- **Türemiş Nitelik (Derived Attribute)** – Hesaplanarak elde edilen nitelik. → (📄 PDF)  \n- **Anahtar Nitelik (Key Attribute)** – Varlığı tanımlayan benzersiz nitelik. → (📄 PDF)  \n- **Çok Değerli Nitelik (Multivalued Attribute)** – Bir varlık için birden çok değer alabilen nitelik. → (📄 PDF)  \n- **Bağlantı (Line)** – Varlıklar arasındaki ilişki türünü gösteren çizgi. → (📄 PDF)\n\nBu öğeler, bir veri modelinin yapısını ve veri nesneleri arasındaki bağlantıları net bir şekilde tasvir etmeye yarar.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görsel bize ne anlatıyor ve pdf ile ilgili nasıl bir ilişkisi var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin anlattığı**\n\nGörselde, bir öğrencinin disiplin cezası, not ortalaması ve giriş puanına göre burs alıp almayacağını ve alıyorsa ne kadar burs alacağını belirleyen bir karar akış diyagramı yer alıyor.  \n- Başlangıç düğümü “Disiplin cezası almış” (oval) ve iki olası yol (“Evet” → “Burs alamaz”, “Hayır” → “Not ortalaması > 70”) bulunur.  \n- “Not ortalaması > 70” (oval) yine “Evet” ve “Hayır” dallarına ayrılır; her dal “Giriş puanı > Giriş ortalaması” kararına yönlendirilir.  \n- Bu son kararın sonuçları “Okul süresince yarım burs”, “Okul süresince tam burs”, “1 yıl yarım burs” ve “Burs alamaz” gibi dikdörtgen sonuç düğümleridir.  \n- Kullanılan sayısal değer: **70**. → (🖼️ Görüntü)\n\n**PDF ile ilişkisi**\n\nPDF’de “Veri Akış Diyagramı (VAD)” ve VAD simgeleri (dış varlık, işlem, veri akışı, veri deposu) gibi modelleme araçları tanımlanmıştır. → (📄 PDF)  \nGörseldeki akış diyagramı da bir süreç modellemesidir; karar noktaları (oval) ve sonuç durumları (dikdörtgen) kullanılarak bir iş akışı gösterilir. Bu yönüyle, PDF’de anlatılan VAD‑benzeri diagramlama yaklaşımının bir örneği olarak değerlendirilebilir; ancak görseldeki semboller VAD‑simgelerinden farklı olarak karar‑akış (flowchart) biçimindedir.\n\n**Kaynaklardan çıkardığım kadarıyla…**  \nPDF, veri akışı ve süreç modelleme için kullanılan sembolleri tanıtırken, görsel bu kavramların bir uygulamasını—öğrenci burs karar sürecini—karar‑akış diyagramı şeklinde sunar. İki kaynak da sistem analizi ve süreç modellemesi amacıyla diagramları kullanır; PDF teorik temeli, görsel ise bu temelin burs değerlendirme sürecine uygulanmış bir örneğini gösterir.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "karar tablolarında kullanbilir miyiz ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Karar tabloları hakkında kısa bir özet**\n\nKarar tabloları, yazılımın akışındaki dallanmaları ve koşulları daha düzenli bir şekilde göstermek için kullanılan bir araçtır. Tablo satırlarına koşullar, sütunlara ise yapılacak işlemler ve ilgili kurallar yerleştirilir; her koşulun yanıtı “Evet‑Hayır”, “Doğru‑Yanlış” gibi biçimlerde ifade edilir. Bu tablolar, kod içinde iç içe `if` deyimleri, `switch` ya da `case` yapılarıyla gerçekleştirilebilir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "tamam bir önceki sohbetimde bu görsel ile pdf arasındaki ilişkiyi sordum ya bu karar tabloları olabilir mi ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görsel ile PDF arasındaki ilişki**\n\nPDF’de karar tablolarının, koşulları satırlara, yapılacak işlemleri sütunlara yerleştirerek karar mantığını düzenli bir biçimde gösterdiği ve kod içinde iç içe if, switch ve case yapılarıyla uygulanabileceği belirtilmiştir. → (📄 PDF)\n\nGörselde ise bir öğrencinin burs alıp almayacağını belirlemek için “Disiplin cezası almış”, “Not ortalaması > 70”, “Giriş puanı > Giriş ortalaması” gibi koşullara dayalı bir karar ağacı (akış diyagramı) sunulmuştur. → (🖼️ Görüntü)\n\n**Sentez**  \nKaynaklardan çıkardığım kadarıyla, PDF’de tanımlanan karar tabloları ve görseldeki karar ağacı aynı amaç—karar verme kurallarını modellemek—için farklı gösterim biçimleridir. PDF’deki karar tabloları koşul‑sonuç ilişkisini tablo şeklinde, görseldeki ise ağaç/akış diyagramı şeklinde sunar. Dolayısıyla görseldeki karar ağacı, PDF’deki karar tablolarının bir alternatif temsil biçimi olarak düşünülebilir; aynı mantık tabloya dönüştürülerek de ifade edilebilir, ancak görsel hâliyle bir karar tablosu değildir, bir karar ağacıdır.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görsel pdf e göre nedir ne için kullanılır ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\görsel_2026-06-28_182631480.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görsel ve PDF’deki içeriklerin tanımı ve kullanım amaçları**\n\nPDF’de yer alan “ŞİRKET Veritabanı için E‑R Diyagramı”, bir şirketin veri tabanını modellemek için kullanılan **Varlık‑İlişki (Entity‑Relationship) diyagramıdır**. Bu diyagramda varlık, nitelik, bileşik nitelik, zayıf varlık, türemiş nitelik, anahtar nitelik, bağ, çok değerli nitelik gibi temel E‑R sembolleri gösterilir ve veri tabanı tasarımının yapısal çözümlemesi için bir araç olarak kullanılır. → (📄 PDF)\n\nGörselde ise “Hastane faturalama sistemi” başlıklı bir **akış diyagramı** bulunur. Diyagram, Doktor, Muayene, Hasta, Prim, Muhasebe ve Fatura gibi altı ana varlığı ve bunların birbirleriyle olan ilişkilerini (örneğin Doktor‑Hasta‑Muayene, Muayene‑Prim‑Fatura, Muhasebe‑Fatura) oklarla gösterir. Her varlığın sahip olduğu nitelikler (ör. Doktorun “DiplomaNo”, “AdıSoyadı”, “Branş” gibi) de listelenmiştir. Bu diyagram, hastane içinde faturalama sürecinin nasıl işlediğini ve ilgili taraflar arasındaki veri akışını görselleştirmek amacıyla hazırlanmıştır. → (🖼️ Görüntü)\n\n**Kaynaklardan çıkardığım kadarıyla…**  \nPDF’deki E‑R diyagramı, veri tabanı tasarımının temel kavramlarını tanımlayan bir modelleme aracıyken, görseldeki akış diyagramı ise bir iş sürecinin (hastane faturalama) adımlarını ve bu adımlarda yer alan varlık‑nitelik ilişkilerini gösteren bir süreç haritasıdır. İkisi de “veri ve süreç modelleme” amacına hizmet eder; biri veri yapısını (PDF), diğeri ise veri akışını ve iş mantığını (görsel) ortaya"
+    },
+    {
+      "rol": "user",
+      "icerik": "pdf e göre bu görsel neye hizmet eder görevi nedir ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\görsel_2026-06-28_182857124.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin amacı ve işlevi**\n\nPDF’te, sistem modellemesinde “Veri Akış Diyagramı (VAD)”, “Davranış Modellemesi (Durum geçiş diyagramı vb.)” gibi diyagramların kullanıldığı belirtilmiştir → (📄 PDF). Görüntüde ise bir ATM işleminin adımlarını ve bu adımlar arasındaki koşullu geçişleri gösteren bir akış diyagramı (flowchart) yer almaktadır → (🖼️ Görüntü).\n\n**Kaynaklardan çıkardığım kadarıyla**, bu görsel bir akış diyagramı olarak, ATM’de gerçekleşen işlem sırasını (kart okuma, PIN girişi, işlem seçimi, işlem gerçekleştirme, kart çıkarma) ve kullanıcı etkileşimlerine bağlı olası alternatif yolları (kart okunamaz, iptal, başka işlem) modelleyerek sistemin davranışını ve veri akışını görsel olarak ifade etmektedir. Böylece, PDF’de vurgulanan “davranış modellemesi” ve “veri akış diyagramı” amaçları bu görselde somutlaşmıştır.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne anlatıyor ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\görsel_2026-06-28_182857124.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görseldeki Durum Geçiş Diyagramı, bir ATM’nin işlem akışını gösteriyor.**  \n\n- Diyagramda beş ana durum (kutular) bulunur: **Reading Card**, **Reading PIN**, **Choosing Transaction**, **Performing Transaction** ve **Ejecting Card**. → (🖼️ Görüntü)  \n- Başlangıç düğümünden **Reading Card** durumuna geçilir. Kart başarıyla okunursa ok okuyla **Reading PIN**e, okunamazsa **Ejecting Card**a yönlendirilir. → (🖼️ Görüntü)  \n- **Reading PIN** durumunda PIN doğru girildiğinde **Choosing Transaction**a, kullanıcı “Cancel” tuşuna bastığında **Ejecting Card**a geçilir. → (🖼️ Görüntü)  \n- **Choosing Transaction**da bir işlem seçildiğinde **Performing Transaction**a, “Cancel” basıldığında **Ejecting Card**a gidilir. Ayrıca “Another Transaction” seçilirse aynı durumdan **Performing Transaction**a bir döngü oluşur. → (🖼️ Görüntü)  \n- **Performing Transaction** tamamlandığında kart **Ejecting Card** durumuna çıkar ve oradan son düğüme (işlem bitişi) geçilir. → (🖼️ Görüntü)  \n\nBu diyagram, ATM’de kart okuma, PIN doğrulama, işlem seçimi ve işlemin gerçekleştirilmesi aşamalarının başarılı ya da iptal/başarısız durumlarına göre nasıl ilerlediğini görsel olarak özetler.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "peki pdf ile ilşkisi nedir bu diyagramın ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\görsel_2026-06-28_182857124.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "❌ Bu konuda kaynaklarda bilgi bulunamadı."
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselin pdf ile ilişkisi nedir ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\görsel_2026-06-28_182857124.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görsel ile PDF arasındaki ilişki**\n\nPDF belgesinde (📄) “Yapısal Çözümleme ve Modelleme Yöntemleri” başlığı altında **Davranış Modellemesi (Durum geçiş diyagramı vb.)** gibi bir modelleme yöntemi listelenmiştir. Bu, sistemlerin davranışlarını adım‑adım gösteren diyagramların kullanılabileceğini ifade eder.\n\nGörsel analizinde (🖼️) bir **Durum Geçiş Diyagramı** sunulmuş; ATM işlemlerinin (kart okuma, PIN girme, işlem seçme, işlem gerçekleştirme, kart çıkarma) adımları ve bu adımlar arasındaki geçişler ayrıntılı olarak gösterilmiştir.\n\n**Kaynaklardan çıkardığım kadarıyla**, PDF’te bahsedilen “Durum geçiş diyagramı” kavramı, görseldeki ATM sürecini modelleyen diyagramla somutlaşmıştır. Yani PDF, bu tür diyagramların kullanılabileceğini belirtirken, görsel ise bu yöntemin bir örnek uygulamasını – bir ATM’in işlem akışını – göstermektedir.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    }
   ]
 }

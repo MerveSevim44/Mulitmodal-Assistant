@@ -1,8 +1,6 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from week1_rag.retriever import belge_getir
 from week2_multimodal.stt import ses_to_metin
 from week2_multimodal.vision import goruntu_analiz
 from langchain_groq import ChatGroq
@@ -183,7 +181,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 50)
     print("TEST 2: Görüntü + soru")
     print("=" * 50)
-    goruntu_yolu = "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\test.png"
+    goruntu_yolu = os.path.join(os.path.dirname(__file__), "test.png")
     if os.path.exists(goruntu_yolu):
         cevap = pipeline({
             "goruntu": goruntu_yolu,
@@ -194,7 +192,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 50)
     print("TEST 3: Ses + soru")
     print("=" * 50)
-    ses_yolu = "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\test.mp4"
+    ses_yolu = os.path.join(os.path.dirname(__file__), "test.mp4")
     if os.path.exists(ses_yolu):
         cevap = pipeline({
             "ses": ses_yolu,

@@ -7,10 +7,14 @@
 langchain==0.3.25              # Ana RAG pipeline
 langchain-community==0.3.24    # Topluluk entegrasyonları (Ollama, ChromaDB vb.)
 langchain-core==0.3.59         # Temel soyutlamalar (Runnable, prompt vb.)
-# langchain-groq==0.1.10       # KALDIRILAN: Versiyon uyuşmazlığı (ayrı kurulacak)
+langchain-groq==0.2.5          # Groq LLM (pipeline.py / rag_chain.py) — langchain 0.3 uyumlu
+
+# --- WEB ARAYÜZÜ ---
+streamlit==1.45.1              # Ana uygulama arayüzü (main.py)
 
 # --- VEKTÖR VERİTABANI (1. Hafta) ---
 chromadb==1.0.5                # Lokal vektör DB (ücretsiz, kalıcı)
+langchain-chroma==0.2.3        # Chroma entegrasyonu (retriever.py / rag_chain.py)
 
 # --- EMBEDDING MODELİ (1. Hafta) ---
 sentence-transformers==4.1.0   # Metin → vektör (all-MiniLM-L6-v2, ücretsiz)
@@ -26,6 +30,11 @@ torchvision==0.17.2            # Vision models (torch ile uyumlu versiyon)
 # torchaudio==2.6.0              # Ses işleme (Week 2 için)
 soundfile==0.12.1              # WAV / FLAC okuma
 librosa==0.10.2                # Ses ön işleme (sample rate dönüşümü)
+
+# --- LLM / API İSTEMCİLERİ ---
+groq==0.13.0                   # Whisper STT (stt.py)
+openai==1.55.3                 # OpenRouter görüntü analizi (vision.py, OpenAI SDK)
+pydub==0.25.1                  # Ses formatı dönüşümü (stt.py, ffmpeg gerektirir)
 
 # --- GÖRÜNTÜ ANALİZİ (2. Hafta) ---
 Pillow==11.2.1                 # Görüntü okuma/dönüştürme (PIL)

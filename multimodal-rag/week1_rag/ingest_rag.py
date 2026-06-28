@@ -161,11 +161,13 @@ def goruntu_yukle(dosya_yolu: str, ders_adi: str, ders_id: str, konu_adi: str = 
 if __name__ == "__main__":
     # Önce mevcut belgeleri yükle
     # Sonra ses dosyasını yükle
+    test_voice_path = os.path.join(os.path.dirname(__file__), "test.mp4")
+    pdf_path = os.path.join(os.path.dirname(__file__), "ders_notu.pdf")
     ses_yukle(
-        "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\test.mp4",
+        test_voice_path,
         ders="Yapay Zeka"
     )
     pdf_yukle(
-        "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\ders_notu.pdf",
+    pdf_path,
     ders="mikroişlem"  # kendi ders adını yaz
     )
