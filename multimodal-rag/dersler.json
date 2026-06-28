@@ -34,21 +34,12 @@
       "konu_50a39c17": {
         "id": "konu_50a39c17",
         "ad": "Agient AI"
-      },
-      "konu_eb536b27": {
-        "id": "konu_eb536b27",
-        "ad": "new task"
       }
     }
   },
   "ders_2a414319": {
     "id": "ders_2a414319",
     "ad": "yazılım mühendisliği",
-    "konular": {
-      "konu_c4d7e9a9": {
-        "id": "konu_c4d7e9a9",
-        "ad": "gereksinim çözümleme"
-      }
-    }
+    "konular": {}
   }
 }

@@ -15,35 +15,45 @@ vektor_db = Chroma(
     embedding_function=embeddings
 )
 
-retriever = vektor_db.as_retriever(search_kwargs={"k": 6})
+#similarity_search → max_marginal_relevance_search: 
+# Aynı şeyi tekrar eden chunk'lar yerine çeşitlilik getirir. Tanım + örnek + uygulama gibi farklı yönleri yakalar.
+
+retriever = vektor_db.as_retriever(search_kwargs={"k": 8})
+
 def belge_getir(soru: str, ders_id: str = None, konu_id: str = None, kaynak: str = None) -> str:
     
     filtre_kosullari = []
     if konu_id:
-        filtre_kosullari.append({"konu_id": konu_id})  # konu seçiliyse öncelikli filtre
+        filtre_kosullari.append({"konu_id": konu_id})
     elif ders_id:
-        filtre_kosullari.append({"ders_id": ders_id})  # konu yoksa derse göre filtrele
+        filtre_kosullari.append({"ders_id": ders_id})
     if kaynak:
         filtre_kosullari.append({"kaynak": kaynak})
     
     if filtre_kosullari:
-        # Multiple conditions need $and operator for Chroma
         filtre = {"$and": filtre_kosullari} if len(filtre_kosullari) > 1 else filtre_kosullari[0]
-        docs = vektor_db.similarity_search(
+        docs = vektor_db.max_marginal_relevance_search( #aynı şeyleri tekrar eden chunk'lar yerine çeşitlilik getirir. Tanım + örnek + uygulama gibi farklı yönleri yakalar.
             soru,
-            k=3,
+            k=8,           # 3 → 8
+            fetch_k=25,    # önce 25 aday çek, içinden çeşitli 8 tanesini seç
             filter=filtre
         )
     else:
-        docs = retriever.invoke(soru)
+        docs = vektor_db.max_marginal_relevance_search(soru, k=8, fetch_k=25)
     
     for doc in docs:
         print(f"--- Kaynak: {doc.metadata.get('kaynak')} | Konu: {doc.metadata.get('konu_adi')} ---")
         print(f"{doc.page_content[:100]}\n")
     
     return "\n\n".join(doc.page_content for doc in docs)
-
 if __name__ == "__main__":
-    test_soru = "8086 mikroişlemcisinde segment registers ne işe yarar?"
-    print(f"Soru: {test_soru}")
-    print(f"\nBulunan belgeler:\n{belge_getir(test_soru)}")
+# Doğrudan "örnek" geçen chunk'ları ara
+    docs = vektor_db.similarity_search(
+    "performans güvenlik kullanılabilirlik gereksinim örnek",
+    k=10
+)
+    for doc in docs:
+        print("---")
+        print(f"Kaynak: {doc.metadata.get('kaynak')}")
+        print(f"Konu: {doc.metadata.get('konu_adi')}")
+        print(doc.page_content[:300])

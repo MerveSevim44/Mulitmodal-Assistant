@@ -386,63 +386,6 @@
       "icerik": "[Konuya kısa giriş cümlesi]\nGörsele göre kurallar, bir tasarım sürecinde kullanılan kuralların bir parçası olarak tanımlanabilir.\n\n[Açıklama — kaynak etiketleriyle]\nGörsele göre kurallar, tasarım sürecinde kullanılan kuralların bir parçası olarak tanımlanabilir. Bu kurallar, tasarım sürecinde kullanılan görsellerin ve grafiklerin kurallarına göre belirlenir. Örneğin, bir logo tasarımında kullanılan kurallar, logo'nun renkleri, şekilleri ve boyutları ile ilgili olabilir. Bu kurallar, tasarım sürecinde kullanılan görsellerin ve grafiklerin kurallarına göre belirlenir.\n\nVarsa örnek veya özet:\nÖrnek olarak, bir marka için kullanılan kurallar, marka logosunda kullanılan renklerin ve şekillerin kurallarına göre belirlenir. Bu kurallar, marka kimliği ve marka değerini korumak için önemlidir.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ❌] [Görüntü: ❌]"
     }
   ],
-  "ders_2a414319_konu_c4d7e9a9": [
-    {
-      "rol": "user",
-      "icerik": "bu görselde ne var ",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-27 003204.png"
-    },
-    {
-      "rol": "user",
-      "icerik": "bu görselde ne var ",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-27 003204.png"
-    },
-    {
-      "rol": "assistant",
-      "icerik": "**Görselin içeriği**\n\nBu görsel, veri akış diyagramı (VAD) kurallarını gösteren **“VAD Kuralları”** başlıklı bir tablo içerir. Tablo üç sütundan oluşur: **Kural**, **Yanlış** ve **Doğru** → (🖼️ Görüntü).  \n\n1. **Kural 1:** “Bir işlemden farklı iki işleme gidecek olan aynı veri, aynı yönde iki ucu açık okla gösterilmelidir.”  \n   - **Yanlış örnek:** 0.0 İşlem → 2.0 İşlem ve 0.0 İşlem → 3.0 İşlem oklarla gösterilmemiş → (🖼️ Görüntü).  \n   - **Doğru örnek:** Aynı iki işlem arasında veri akışı oklarıyla gösterilmiş → (🖼️ Görüntü).  \n\n2. **Kural 2:** “Veri hiçbir işlemden geçmeden çıktığı işleme doğrudan dönmez.”  \n   - **Yanlış örnek:** 0.0 İşlem → 1.0 İşlem → 0.0 İşlem (veri doğrudan dönüyor) → (🖼️ Görüntü).  \n   - **Doğru örnek:** 1.0 İşlem → 3.0 İşlem (doğrudan dönüş yok) → (🖼️ Görüntü).  \n\n3. **Kural 3:** “Veri akış okları üzerinde gösterilen veri, sadece isim formatında olmalıdır.”  \n   - **Yanlış örnek:** “Siparişi Doğula”, “Zaman Çizelgesini Tamamla” → (🖼️ Görüntü).  \n   - **Doğru örnek:** “Doğrulanmış Sipariş”, “Tamamlanmış Zaman Çizelgesi” → (🖼️ Görüntü).  \n\nTablonun altında, **düğümler (İşlem)** olarak 0.0, 1.0, 2.0, 3.0 numaralı işlemler, **oklar** veri akışı okları ve **bağlantılar** bu işlemler arasındaki veri akışını gösterir → (🖼️ Görüntü). Ayrıca oklar üzerindeki etiketler “Siparişi Doğula”, “Zaman Çizelgesini Tamamla”, “Doğrulanmış Sipariş”, “Tamamlanmış Zaman Çizelgesi” olarak listelenmiştir → (🖼️ Görüntü).  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
-    },
-    {
-      "rol": "user",
-      "icerik": "bu görselde ne var ",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
-    },
-    {
-      "rol": "assistant",
-      "icerik": "**Görselin İçeriği**\n\nBu görsel, bir **Binary Search Tree (İkili Arama Ağacı)** diyagramını göstermektedir. → (🖼️ Görüntü)  \nDüğümler kutular halinde sunulmuş; her birinin içinde bir **key (anahtar)** değeri ve sol‑sağ çocuk referansları bulunur. → (🖼️ Görüntü)  \nKök düğümün değeri **6**dır; sol çocuğu **4**, sağ çocuğu **8** olarak etiketlenmiştir. → (🖼️ Görüntü)  \nDiğer düğüm değerleri **2, 5, 7, 9** şeklinde gösterilmiştir. → (🖼️ Görüntü)  \n\n**İkili Arama Ağacı Kuralları (görselde belirtilen)**  \n- Sol alt ağaçtaki tüm düğümler, kök düğümün değerinden küçüktür. → (🖼️ Görüntü)  \n- Sağ alt ağaçtaki tüm düğümler, kök düğümün değerinden büyüktür. → (🖼️ Görüntü)  \n- Her alt ağaç da aynı BST özelliklerini taşır. → (🖼️ Görüntü)  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
-    },
-    {
-      "rol": "user",
-      "icerik": "VAD Kuralları tablosunda kaç sütun vardı ",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
-    },
-    {
-      "rol": "assistant",
-      "icerik": "❌ Bu konuda kaynaklarda bilgi bulunamadı.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
-    },
-    {
-      "rol": "user",
-      "icerik": "bu görselde peki linked list mi kullanıldı ",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
-    },
-    {
-      "rol": "assistant",
-      "icerik": "**Görseldeki sistem mimarisi hakkında**\n\nGörsel, GSM ağı bileşenlerini (Data, EIR, MSC, VLR, HLR, AUC vb.) ve aralarındaki veri akışını gösteren bir diyagramdır; içinde linked list (bağlı liste) kullanımına dair herhangi bir ibare yer almamaktadır. → (🖼️ Görüntü)\n\n⚠️ **Kaynakta eksik bilgi var:** Görselde linked list kullanımına dair bilgi bulunmamaktadır. Kaynağı güncellemenizi öneririm.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
-    },
-    {
-      "rol": "user",
-      "icerik": "bu görselde ne var peki",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
-    },
-    {
-      "rol": "assistant",
-      "icerik": "**Görselin içeriği**\n\nBu görsel, düğümler ve oklarla gösterilen bir **ağaç veri yapısını** tasvir etmektedir → (🖼️ Görüntü). Görseldeki ağaç, kök düğümü **10** olan, her düğümün iki çocuğu olabilen bir **ikili ağaç (Binary Tree)** şeklinde düzenlenmiştir → (🖼️ Görüntü). Kök düğümün sol çocuğu **5**, sağ çocuğu ise **15** olarak gösterilmiştir → (🖼️ Görüntü). \n\n- **5** düğümünün sol çocuğu **3**, sağ çocuğu **7** olarak yer alır → (🖼️ Görüntü).  \n- **15** düğümünün sol çocuğu **12**, sağ çocuğu **20** olarak bulunur → (🖼️ Görüntü).  \n\nBu yapı, değerlerin sol alt dallarda daha küçük, sağ alt dallarda daha büyük olduğu bir **ikili arama ağacı (Binary Search Tree - BST)** özelliği taşıdığı izlenimini verir → (🖼️ Görüntü).\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
-    },
-    {
-      "rol": "user",
-      "icerik": "bu görselde ne var peki",
-      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
-    }
-  ],
   "ders_912f43de_konu_eb536b27": [
     {
       "rol": "user",
@@ -461,6 +404,219 @@
     {
       "rol": "assistant",
       "icerik": "**Görselde “Head” öğesinin bağlantıları**\n\nGörseldeki veri dizisi diyagramına göre **Head (1390)** doğrudan üç alt öğeye bağlanmıştır:\n\n- **Bat (218)**\n- **Tail (1096)**\n- **Num (207)**  \n\nBu üç öğe, Head’in yönlendirdiği (gittiği) noktalar olarak gösterilmiştir. → (🖼️ Görüntü)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\indir (1).png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin İçeriği**\n\nGörsel, bir **bağlı liste (linked list)** veri yapısını göstermektedir. Düğümler (nodes) veri ve bir sonraki düğümü gösteren bir işaretçiden oluşur. → (🖼️ Görüntü)\n\n- **Düğümler ve Veri Değerleri**  \n  - “bat” düğümü → veri: 1290 → (🖼️ Görüntü)  \n  - “frog” düğümü → veri: 812 → (🖼️ Görüntü)  \n  - “lion” düğümü → veri: 208 → (🖼️ Görüntü)  \n  - “owl” düğümü → veri: 920 → (🖼️ Görüntü)  \n  - “seal” düğümü → veri: 645 → (🖼️ Görüntü)  \n\n- **Bağlantılar (Oklar)**  \n  - “head” referansı “bat” düğümüne işaret eder. → (🖼️ Görüntü)  \n  - “bat” → “frog” → “lion” → “owl” → “645” (bu değer “seal” düğümüne eşdeğerdir). → (🖼️ Görüntü)  \n  - “seal” düğümünün “next” işaretçisi **null**’a (listenin sonu) eşittir. → (🖼️ Görüntü)\n\n- **Özel Durum**  \n  - “owl” düğümünün “next” alanı 645 değerini gösterir; bu değer ayrı bir düğüm olarak görünmese de “seal” düğümüne karşılık gelir ve listenin son elemanıdır. → (🖼️ Görüntü)\n\nBu bilgiler, görseldeki bağlı listenin yapısını, düğüm adlarını, veri değerlerini ve birbirlerine olan yönlendirmelerini özetler.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var peki ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\training_curves.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselde iki adet grafik bulunuyor.** → (🖼️ Görüntü)\n\n1. **Sol taraftaki grafik “Training & Validation Loss” grafiğidir.** X ekseni epoch (0‑40), Y ekseni loss (0.5‑3.5) olarak işaretlenmiştir; mavi çizgi eğitim kaybını, turuncu çizgi doğrulama kaybını gösterir. Epoch sayısı arttıkça her iki kayıp değeri de düşmektedir. → (🖼️ Görüntü)\n\n2. **Sağ taraftaki grafik “Training & Validation Accuracy” grafiğidir.** X ekseni epoch (0‑40), Y ekseni accuracy (%) (30‑100) olarak gösterilir; mavi çizgi eğitim doğruluğunu, turuncu çizgi doğrulama doğruluğunu temsil eder. Epoch ilerledikçe doğruluk değerleri artmaktadır. → (🖼️ Görüntü)\n\n3. **Grafiklerdeki ortak etiketler:** Epoch değerleri 0, 5, 10, 15, 20, 25, 30, 35, 40; loss değerleri 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5; accuracy değerleri 30, 40, 50, 60, 70, 80, 90. → (🖼️ Görüntü)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne anlatılıyor ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin içeriği**\n\nGörselde, bir kişinin beyaz kağıda kırmızı kalemle bir akış diyagramı ve adım‑adım açıklamalar çizdiği görülüyor. Kağıdın sol tarafında siyah renkle 7 adımlı bir algoritma listelenmiş; sağ tarafında ise aynı algoritmayı gösteren kırmızı renkle çizilmiş bir akış diyagramı bulunuyor. Algoritma, **S = 1, T = 0** başlangıç değerleriyle başlar, **S** değeri 1’den 100’e kadar artarken **T** bu değerlerin toplamını (T = 1 + 2 + … + 100) günceller ve **S** 100’ü aştığında döngü sona ererek **T** yazdırılır. Görselin üst kısmında kırmızı renkle “1'den 100'e kadar olan sayıların toplamını bulan algoritma” ifadesi yer alıyor. → (🖼️ Görüntü)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "nasıl bir yol izliyor bunu yaparken",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Algoritmanın izlediği yol**\n\nAlgoritma, “1'den 100'e kadar olan sayıların toplamını bulan algoritma” başlığıyla başlayan bir akış diyagramı ve yedi adımlı bir listeye dayanır. İlk adımda **Başla** denir, ardından **S=1, T=0** olarak değişkenler tanımlanır → (🖼️ Görüntü). Daha sonra **T=T+S** işlemiyle mevcut S değeri toplam T’ye eklenir → (🖼️ Görüntü) ve **S=S+1** ile S bir artırılır → (🖼️ Görüntü). Artırılan S değeri **S<=100** koşuluyla kontrol edilir; koşul doğruysa (yani S hâlâ 100’den küçük veya eşitse) akış **Adım 3**‑e (T’ye ekleme) geri döner ve döngü bu şekilde devam eder → (🖼️ Görüntü). Koşul yanlış olduğunda (S>100) döngü sonlanır, **Yaz, T** adımıyla elde edilen toplam ekrana yazdırılır ve **Bitir** adımıyla program tamamlanır → (🖼️ Görüntü).\n\nBu adımlar, akış diyagramındaki kutular ve oklarla görsel olarak da gösterilmiştir; “99+100+x” ifadesi ve “x=0” notu, son adımda eklenen değerin sıfır olduğunu vurgular → (🖼️ Görüntü).\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "accurcy loss grafiği nasıldı iyi bir şekilde ilerliyor muydu ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "❌ Bu konuda kaynaklarda bilgi bulunamadı."
+    },
+    {
+      "rol": "user",
+      "icerik": "pdf te ne var ne anlatıyor ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**PDF içeriği ve anlatılan konular**\n\nPDF, iki ana bölümden oluşmaktadır:\n\n1. **Yazılım İsterleri Belirtimi (SRS) tanıtımı**  \n   - “Software Requirements Specification” adı verilen belge, çeşitli formatlarda hazırlanabilir (sunum, doküman vb.) ve farklı standartlarda yer alır. → (📄 PDF)  \n   - İyi bir SRS’in sahip olması gereken özellikler sıralanmıştır: Doğrulanabilir, Kesin, Tam, Doğrulanabilir, Tutarlı, Müşteri tarafından anlaşılabilir, Değişebilir, Önceki belgelere bağlantılı, İzlenebilir, Notlu, Düzenli. → (📄 PDF)\n\n2. **Kullanım durumu (Use Case) örneği – “Para Çekme”**  \n   - Kullanıcı senaryosu No1 olarak “Para çekme” tanımlanmıştır; senaryoyu tanımlayan ve son güncelleyen kişi “Ali Veli” olarak belirtilmiştir. → (📄 PDF)  \n   - Senaryoya ait tarih alanları (tanımlandığı tarih, güncelleme tarihi) “gg/aa/yy” formatında gösterilmiştir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Nesneye Yönelik Çözümleme anlatılmış mı ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Nesneye Yönelik Çözümleme hakkında bilgi**\n\nNesneye yönelik çözümleme ve tasarım kullanıldığında kodların ve modüllerin yeniden kullanılabilirliği kolaylaşır, geliştirme süresi kısalır, üretkenlik artar, yazılım kalitesi yükselir ve anlaşılabilirlik kolaylaşır → (📄 PDF).  \nÖnerilen süreç modeli yinelemeli ve artımlı bütünleştirilmiş bir modeldir; analiz ve tasarım aşamalarında ise tümleştirilmiş modelleme dili olarak UML (Unified Modeling Language) kullanılmaktadır → (📄 PDF).\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "temel kavramlar neler ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Temel kavramlar**  \n\nGerçek dünyada sorumlulukları yerine getiren varlıklar, yazılımda ise çeşitli hizmetler sunan ve özellikleri bulunan varlıklar olarak tanımlanır → (📄 PDF)  \nProgramcı bakış açısından bu varlıklar, veri ve fonksiyonlardan oluşan bir modül olarak görülür → (📄 PDF)  \nNesne‑yönelimli modellemede “nesne”, aynı özellik ve işlemlere sahip bir küme olarak tanımlanır → (📄 PDF)  \nBu nesnelerin bir “şablonu” sınıftır; sınıf, özellik (attribute) ve işlem (method) tanımlarını içerir → (📄 PDF)  \nHer nesne, tanımlanan sınıfın bir örneği yani **instance**dır → (📄 PDF)  \nÖrnek olarak “Araba” sınıfı; renk (String), model (String) ve hız (Integer) özelliklerine ve “hızlan()”, “frenle()” işlemlerine sahiptir → (📄 PDF)  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Prototipleme nedir ve faydaları nelerdir pdf e göre ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Prototipleme**, bir sistemin ya da bileşenin işlevlerini, tasarımını ve gereksinimlerini erken aşamalarda test etmek amacıyla oluşturulan örnek (prototip) çalışmalardır.  \n\n**Faydaları** (PDF’ye göre):\n\n- **Gereksinim geçerleme** – Ön gereksinimler prototiplerle doğrulanır; gelen geribildirimle gereksinimler düzeltilir. → (📄 PDF)  \n- **Arayüz tasarımı** – Bileşenlerin bütünleştirilmesi prototipler aracılığıyla incelenir. → (📄 PDF)  \n- **Veritabanı doğrulaması** – Ticari bir veritabanı sisteminin tüm işlemleri karşılayabileceği prototiple gösterilir. → (📄 PDF)  \n- **Yapılabilirlik çözümlemesi** – Yeni bileşenlerin uygulanabilirliği prototip üzerinden analiz edilir. → (📄 PDF)  \n- **Performans çözümlemesi** – Performans hedefleri prototip üzerinde test edilir. → (📄 PDF)  \n- **Donanım ve yazılım prototipleri** – Donanım tasarımı ve yazılım gereksinimleri ayrı ayrı prototiplerle geçerlemlenir. → (📄 PDF)  \n- **Farklı çözüm yollarının araştırılması** – Çeşitli alternatif tasarımlar prototiplerle denenir. → (📄 PDF)  \n- **Yeni bilgi edinme** – Sistemin bir kısmının gerçekleştirilmesiyle yeni bilgiler elde edilir. → (📄 PDF)  \n- **Karmaşık sistemlerin anlaşılması** – Anlaşılması zor gereksinimler ve karmaşık sistem davranışları prototiplerle daha iyi kavranır. → (📄 PDF)  \n\nBu faydalar, prototiplemenin gereksinimlerin netleştirilmesi, tasarım risklerinin azaltılması ve sistem performansının erken değerlendirilmesi gibi kritik avantajlar sağladığını gösterir.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "neden uml kullanılıyor ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\maxresdefault.jpg"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**UML’in kullanılma nedeni**\n\nSistemlerin dış dünyadan gelen etkilere yanıt verme gibi dinamik davranışlarını tanımlayabilmek için bir modelleme dili gereklidir; bu dil sayesinde önemli ara yüzler, işlevler ve bilgi akışı uygun biçimde gruplanıp tanımlanabilir. UML, bu amaçları karşılayan bir modelleme dili olarak tercih edilir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu ses kaydında ne var ne anlatıyor özetler misin",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Ses kaydı içeriği özeti**\n\nSes kaydında, süreçlerin (process) çalışma sürelerinin ölçülmesi ve bu sürelerin istatistiksel olarak değerlendirilmesi ele alınıyor. Konuşmacı, belirli zaman dilimlerini (2 saniye, 3 saniye, 5 saniye vb.) sayarak toplam süreyi süreç sayısına bölüp ortalama süreci elde etmeyi örnekliyor ve ardından “pliantive zamanlılık” algoritması, gecikme (latency) ve context switch (bağlam değişimi) sırasında süreç kontrol bloğu (PCB) üzerine durum kaydetme ve geri yükleme konularına değiniyor. → (🎤 Ses kaydı)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✓] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": " context switch nedir ses kaydında göre ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Context switch (bağlam değişimi) nedir?**\n\nContext switch, bir işlemci çekirdeğinin çalışmakta olduğu süreci (örneğin P0) durdurup, o sürecin son durumunu PCB (Process Control Block) içine kaydetmesi ve ardından başka bir sürecin (örneğin P1) daha önce kaydedilmiş durumunu PCB’den geri yükleyerek çalıştırmaya başlamasıdır. Bu işlem, farklı süreçlerin sırayla CPU zaman dilimlerini almasını sağlar; aynı süreç içinde ise “contact switch” gerçekleşmez. → (🎤 Ses kaydı)\n\n---\n\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✓] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": " gecikme (latency) anlattı mı ses kaydında ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Gecikme (latency) konusuna ses kaydında değinilmiş mi?**\n\nSes kaydinde, işlemci zamanlaması ve bağlam değişimi (context switch) tartışılırken **“Sputcher latency”** ifadesi geçmektedir. Ancak bu terim yalnızca adını anmakla sınırlı kalmış; gecikmenin ne olduğu, nasıl ölçüldüğü veya sistem performansına etkileri gibi ayrıntılı bir açıklama bulunmamaktadır.  \n\n→ (🎤 Ses kaydı)\n\n---\n\n📊 **Kullanılan kaynaklar:** [PDF: ✗] [Ses: ✓] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "processler nasıl çalışıyor ses kaydına göre ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Ses kaydına göre süreçlerin (process) çalışma şekli**\n\nSes kaydında anlatılanlara göre, bir işlem (process) sistemde zaman içinde aşağıdaki adımlarla ilerler:\n\n- **Başlangıçta** sadece **P1** hazır kuyrukta (ready queue) bulunur; diğer süreçler henüz gelmemiştir. → (🎤 Ses kaydı)  \n- **Bir saniye sonra** **P1** ve **P2** aynı anda hazır kuyrukta yer alır; **ikinci saniye** **P1, P2, P3**; **üçüncü saniye** **P1, P2, P3, P4** hâlâ hazır kuyruktadır ve sonraki saniyelerde bu süreçler kuyrukta kalmaya devam eder. → (🎤 Ses kaydı)  \n- **Birden fazla süreç** hazır kuyrukta bulunduğunda, **hangi zamanlama (scheduling) algoritması** kullanılıyorsa ona göre bir karar verilir; burada **preemptive (öncelikli) zamanlama algoritmaları** kullanılmaktadır. → (🎤 Ses kaydı)  \n- Bir süreç **CPU’da çalışırken** (örneğin **P0**) başka bir süreç gelirse, **context switch** (bağlam değişimi) gerçekleşir"
+    },
+    {
+      "rol": "user",
+      "icerik": "SRS’in sahip olması gereken özellikler nelerdi ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**SRS’in (Software Requirements Specification) sahip olması gereken temel özellikler**\n\n- **Doğrulanabilir** – Gereksinimler test edilebilir ve doğrulanabilir olmalıdır. → (📄 PDF)  \n- **Kesin** – Gereksinimler açık ve kesin bir biçimde tanımlanmalıdır. → (📄 PDF)  \n- **Tam** – Sistemin tüm işlev ve performans gereksinimleri eksiksiz olarak yer almalıdır. → (📄 PDF)  \n- **Tutarlı** – Gereksinimler birbirleriyle çelişmemelidir. → (📄 PDF)  \n- **Müşteri tarafından anlaşılabilir** – Kullanıcı ve paydaşların gereksinimleri rahatça kavrayabilmesi gerekir. → (📄 PDF)  \n- **Değişebilir** – Gereksinimler ilerideki değişikliklere uyum sağlayabilecek şekilde düzenlenmelidir. → (📄 PDF)  \n- **Önceki belgelere bağlantılı** – Gereksinimler ilgili önceki dokümanlarla ilişkilendirilmelidir. → (📄 PDF)  \n- **İzlenebilir** – Her gereksinimin kaynağı ve ilerleyişi izlenebilir olmalıdır. → (📄 PDF)  \n- **Notlu** – Gereksinimlere açıklayıcı notlar eklenerek netlik sağlanmalıdır. → (📄 PDF)  \n- **Düzenli** – Gereksinimler mantıksal ve yapısal bir düzen içinde sunulmalıdır. → (📄 PDF)  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Kullanım durumu (Use Case) örneği – “Para Çekme” nasıl anlatılmış ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Kullanım durumu (Use Case) örneği – “Para Çekme”**\n\n“Para Çekme” kullanım durumu, PDF’deki metinsel bir senaryo olarak tanımlanmıştır. Senaryo şu öğelerden oluşur:\n\n- **Kullanıcı Senaryosu No:** 1  \n- **Kullanıcı Senaryosu Adı:** Para çekme  \n- **Tanımlayan / Son güncelleyen:** Ali Veli  \n- **Tanımlandığı tarih / Güncelleme tarihi:** gg/aa/yy (her iki tarih de aynı formatta verilmiş) → (📄 PDF)\n\nSenaryoya ek olarak **gereksinimler** kısmında, işlemin aktif olabilmesi için ATM’de en az çekilecek tutar kadar para bulunması gerektiği belirtilmiştir → (📄 PDF).\n\nBu bilgiler, “Para Çekme” kullanım durumunun başlık, kimlik, sorumlular, tarih bilgileri ve temel işlevsel gereksinimlerinden oluşan bir metinsel tanım şeklinde sunulduğunu gösterir.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "yeni eklediğim pdf te ne anlatlıyor ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**PDF’nin içeriği**\n\nPDF, iyi bir Yazılım Gereksinimleri Şartnamesi (SRS) belgesinin sahip olması gereken özellikleri ve bu özelliklerin içerik ve biçim açısından nasıl ele alınması gerektiğini açıklamaktadır.\n\n**SRS’in özellikleri**  \n- Doğrul (✅) → (📄 PDF)  \n- Kesin (✅) → (📄 PDF)  \n- Tam (✅) → (📄 PDF)  \n- Doğrulanabilir (✅) → (📄 PDF)  \n- Tutarlı (✅) → (📄 PDF)  \n- Müşteri tarafından anlaşılabilir (✅) → (📄 PDF)  \n- Değişebilir (✅) → (📄 PDF)  \n- Önceki belgelere bağlantılı (✅) → (📄 PDF)  \n- İzlenebilir (✅) → (📄 PDF)  \n- Notlu (✅) → (📄 PDF)  \n- Düzenli (✅) → (📄 PDF)\n\nAyrıca belge, **içeriği** ve **biçimi** ile ilgili hususların da ele alınması gerektiğini vurgular. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Gereksinim türleri nelerdir pdf e göre ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Gereksinim türleri**\n\nGereksinimler, sistem geliştirme sürecinde farklı bakış açıları ve detay seviyeleriyle sınıflandırılır. PDF kaynağına göre dört temel gereksinim türü bulunmaktadır:\n\n- **Kullanıcı İsterleri**: Teknik olmayan dilde, kullanıcı bakış açısıyla yazılır. → (📄 PDF)  \n- **Sistem İsterleri**: Teknik detay içerir, tasarım ve geliştirme için temel oluşturur. → (📄 PDF)  \n- **İşlevsel İsterler**: Sistem ne yapmalı? sorusuna yanıt verir. → (📄 PDF)  \n- **İşlevsel Olmayan İsterler**: Sistem nasıl çalışmalı? (örneğin performans, güvenlik) sorularını kapsar. → (📄 PDF)  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "İşlevsel Olmayan İsterler nedir örnek verebilir misin",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**İşlevsel Olmayan İsterler**  \n\nİşlevsel olmayan isterler, belge içinde net ve açık olmama, doğal dil kullanımından kaynaklı problemler gibi özellikler taşıyan, işlevsel olmayan taleplerdir. Bu tür isterler, işlevsel isterlerle karışma eğilimindedir. → (📄 PDF)\n\n**Örnek**  \nKaynakta işlevsel olmayan isterlere ait somut bir örnek verilmemiştir.  \n⚠️ Kaynakta eksik bilgi var: işlevsel olmayan isterlerin örnekleri. Kaynağı güncellemeni öneririm. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "İşlevsel Olmayan İsterler",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**İşlevsel Olmayan İsterler**\n\nİşlevsel olmayan (işlevsel‑olmayan) isterler, fonksiyonel gereksinimlerle birlikte belgelerde yer alabilir ve birbirine karışma eğilimi gösterir. Bu karışıklık, belgelerin açık ve seçik olmasını zorlaştırarak okunabilirliği ve netliği azaltabilir. Ayrıca, işlevsel ve işlevsel‑olmayan isterlerin bir arada tanımlanması, isteklerin birleşmesi ve farklı birkaç isteğin aynı anda bulunması gibi durumlar da ortaya çıkabilir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "ne gibi örnekler ve bu kavram için pdf te ",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Konuya kısa giriş**  \nPDF, nesneye yönelik modelleme ve veritabanı tasarımıyla ilgili iki temel kavramı örnek diyagramlarla tanıtmaktadır.\n\n**Açıklama**  \n\n- **Nesneye yönelik modelleme**: PDF’te iki ayrı diyagram türünden bahsedilir:  \n  1. **Sınıf Diyagramı** – bir sistemdeki tüm nesnelerin sınıf tanımlarını ve aralarındaki ilişkileri gösterir. → (📄 PDF)  \n  2. **Kullanım Durum (Use‑Case) Diyagramı** – yeni sistemdeki kullanım senaryolarını ve sistemin nasıl kullanılacağını modeller; olayların özet bir tablosu gibidir. → (📄 PDF)\n\n- **E‑R Diyagramı (Şirket Veritabanı)**: PDF, bir şirket veritabanı için E‑R diyagramı sunar ve aşağıdaki bileşenleri listeler:  \n  - **Varlık (Entity)**  \n  - **Nitelik (Attribute)**, **Bileşik Nitelik**, **Zayıf Varlık**, **Türemiş Nitelik**, **Anahtar Nitelik**, **Bağlantı (Relationship)**, **Çok Değerli Nitelik** → (📄 PDF)\n\n**Örnekler**  \nPDF, yukarıdaki kavramları örnek diyagramlar (sınıf diyagramı, kullanım durum diyagramı, şirket veritabanı E‑R diyagramı) şeklinde sunar; ancak bu diyagramların içinde yer alan spesifik sınıflar, kullanım durumları veya varlık‑nitelik örnekleri metinde ayrıntılı olarak verilmemiştir.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "işlevsel olmayan isterlere örnek ver",
+      "ses": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\20251216_201107.m4a"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**İşlevsel olmayan isterler** (non‑functional requirements) hakkında kaynaklarda doğrudan örnek bulunmamaktadır.  \n\n❌ Bu konuda kaynaklarda bilgi bulunamadı.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
+    }
+  ],
+  "ders_2a414319_konu_c4d7e9a9": [
+    {
+      "rol": "user",
+      "icerik": "pdf te işlevsel olmayan isterlere örnekler verir misin"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Konuya kısa giriş**  \nİşlevsel olmayan (non‑functional) gereksinimlere dair örnekler, sağlanan PDF içeriğinde yer almamaktadır.\n\n**Açıklama**  \n❌ Bu konuda kaynaklarda bilgi bulunamadı. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
     }
   ]
 }

@@ -145,7 +145,7 @@ def pipeline(girdi: dict, gecmis: list = None) -> str:
     cevap = chain.invoke({
         # Son 3 tur (6 satır) prompt'a girsin; tüm geçmiş çağıran tarafta kalır.
         # gecmis boşken "".join([]) == "" → {history} boş gider, KeyError olmaz.
-        "history": "\n".join(gecmis[-6:]),
+        "history": "\n".join(gecmis[-10:]),
         "pdf_baglam": pdf_baglam,
         "ses_baglam": ses_baglam,
         "goruntu_baglam": goruntu_baglam,
