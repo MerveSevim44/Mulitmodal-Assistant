@@ -40,6 +40,11 @@
   "ders_2a414319": {
     "id": "ders_2a414319",
     "ad": "yazılım mühendisliği",
-    "konular": {}
+    "konular": {
+      "konu_76c4f441": {
+        "id": "konu_76c4f441",
+        "ad": "Gereksinim çözümleme"
+      }
+    }
   }
 }

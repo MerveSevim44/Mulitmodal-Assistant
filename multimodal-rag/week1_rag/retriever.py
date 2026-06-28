@@ -48,12 +48,6 @@ def belge_getir(soru: str, ders_id: str = None, konu_id: str = None, kaynak: str
     return "\n\n".join(doc.page_content for doc in docs)
 if __name__ == "__main__":
 # Doğrudan "örnek" geçen chunk'ları ara
-    docs = vektor_db.similarity_search(
-    "performans güvenlik kullanılabilirlik gereksinim örnek",
-    k=10
-)
-    for doc in docs:
-        print("---")
-        print(f"Kaynak: {doc.metadata.get('kaynak')}")
-        print(f"Konu: {doc.metadata.get('konu_adi')}")
-        print(doc.page_content[:300])
+# Belirli konunun chunk'larını sil
+    vektor_db.delete(where={"konu_adi": "new task"})
+    vektor_db.delete(where={"konu_adi": "Gereksinim çözümleme"})

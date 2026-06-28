@@ -618,5 +618,149 @@
       "rol": "assistant",
       "icerik": "**Konuya kısa giriş**  \nİşlevsel olmayan (non‑functional) gereksinimlere dair örnekler, sağlanan PDF içeriğinde yer almamaktadır.\n\n**Açıklama**  \n❌ Bu konuda kaynaklarda bilgi bulunamadı. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
     }
+  ],
+  "ders_2a414319_konu_76c4f441": [
+    {
+      "rol": "user",
+      "icerik": "işlevsel olmayan gereksinimlere örnek verir misin pdf e göre "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**İşlevsel Olmayan Gereksinimlere Örnekler**\n\nİşlevsel olmayan gereksinimler, sistemin **nasıl** çalışması gerektiğini belirler; yani performans, güvenlik gibi niteliksel özellikleri tanımlar. PDF kaynağında bu tür gereksinimlere örnek olarak şunlar verilmiştir:\n\n- **Performans** – Sistem belirli bir sürede yanıt vermeli, işlem hacmini karşılayabilmelidir. → (📄 PDF)  \n- **Güvenlik** – Verilerin korunması, yetkisiz erişimin engellenmesi gibi önlemler içermelidir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "gereksinim nedir "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Gereksinim Nedir?**\n\nGereksinim, “gerekli olan, istenen veya ihtiyaç duyulan” durum ya da yetenektir. IEEE 729’a göre, gereksinim;  \n- bir kullanıcının bir problemi çözmek ya da bir hedefi gerçekleştirmek için ihtiyaç duyduğu durum ya da yetenektir,  \n- bir sistemin bir kontrat, standart, belirtim ya da başka bir resmi belgenin şartlarını yerine getirebilmesi için sahip olması gereken durum ya da yetenektir, ve  \n- bir sistemin sağladığı hizmetlerin ve işlevsel kısıtların tanımıdır. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "gereksinim analiz aşamları nelerdir "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "❌ Bu konuda kaynaklarda bilgi bulunamadı."
+    },
+    {
+      "rol": "user",
+      "icerik": "gereksinim analiz aşamaları nelerdir pdf e göre"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Gereksinim analiz aşamaları** hakkında sorulmuş, ancak verilen PDF kaynağında bu aşamaların listesi yer almamaktadır.\n\n❌ Bu konuda kaynaklarda bilgi bulunamadı.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "gereksinim türleri neler "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Gereksinim Türleri**\n\nGereksinimler, sistemin ne yapması ve nasıl çalışması gerektiğini tanımlayan farklı türlerde sınıflandırılır. PDF kaynağında belirtilen dört ana gereksinim türü şunlardır:\n\n- **Kullanıcı İsterleri:** Teknik olmayan dilde, kullanıcı bakış açısıyla yazılır. → (📄 PDF)  \n- **Sistem İsterleri:** Teknik detay içerir, tasarım ve geliştirme için temel oluşturur. → (📄 PDF)  \n- **İşlevsel İsterler:** Sistem ne yapmalı? sorusuna yanıt verir. → (📄 PDF)  \n- **İşlevsel Olmayan İsterler:** Sistem nasıl çalışmalı? (ör. performans, güvenlik) sorusuna yanıt verir. → (📄 PDF)  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Yapısal Çözümleme ve Modelleme Yöntemleri nelerdir\n"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Yapısal Çözümleme ve Modelleme Yöntemleri**\n\nYapısal çözümleme ve modelleme, bir sistemin veri akışını, davranışını ve ilişkilerini görselleştirerek analiz etmeyi amaçlayan çeşitli diyagram ve araçları içerir. Kaynak PDF’e göre bu yöntemler şunlardır:\n\n- **Veri Akış Diyagramı (VAD)** – Sistemdeki veri girişlerinin, işlenmesinin ve çıkışlarının akışını gösterir. → (📄 PDF)  \n- **Davranış Modelleme** – Sistem durumlarını ve bu durumlar arasındaki geçişleri, örneğin durum geçiş diyagramlarıyla tasvir eder. → (📄 PDF)  \n- **Veri Sözlüğü** – Sistemde kullanılan veri öğelerinin tanımlarını ve özelliklerini listeler. → (📄 PDF)  \n- **Karar Tabloları** – Koşul‑sonuç ilişkilerini tablo biçiminde düzenleyerek karar mantığını açıklar. → (📄 PDF)  \n- **Varlık‑İlişki Diyagramları** – Veri tabanı tasarımında varlıklar ve aralarındaki ilişkileri gösterir. → (📄 PDF)\n\nBu beş yöntem, sistemin yapısal özelliklerini farklı bakış açılarıyla modelleyerek gereksinim analizi ve tasarım sürecine destek sağlar.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "VAD çizim yöntemi nedir "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**VAD (Veri Akış Diyagramı) Çizim Yöntemi**\n\nVAD çizim yöntemi, bir sistemin süreç hikâyesini dilbilgisel (gramatik) olarak ayrıştırarak diyagram haline getirmeyi amaçlar. Bu yöntemde:\n\n- **Süreç hikâyesi gramer olarak ayrıştırılır**; tüm isim ve fiiller tanımlanır ve eş‑anlamlı olanlar çıkarılır. → (📄 PDF)  \n- **Fiiller sistem süreçleri olarak kabul edilir** ve VAD içinde balon (daire) içinde gösterilir. → (📄 PDF)  \n- **İsimler dış varlıklar, veri öğeleri ya da veri depoları olarak ele alınır** ve balonların dışına konumlandırılır. → (📄 PDF)  \n\nBu temel ayrıştırmadan sonra bir model oluşturulur ve VAD seviyelerine göre detaylandırılır:\n\n1. **Seviye 0 VAD**: Sistemin bütününü tek bir balon içinde gösterir; giriş‑çıkış akışları oklarla ifade edilir. → (📄 PDF)  \n2. **Seviye 1**: Seviye 0’da tanımlanan süreçler daha ayrıntılı alt süreçler olarak genişletilir. → (📄 PDF)  \n3. **Seviye 2**: Seviye 1’deki süreçler yine daha detaylı alt süreçler hâline getirilir. → (📄 PDF)  \n\nBu adımlar, VAD’nın artan bilgi akışı ve işlevsel detayları içerecek şekilde farklı soyutlama düzeylerinde sistem ya da yazılımı görselleştirmesini sağlar.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": " Sistem belirli bir sürede yanıt vermeli, işlem hacmini karşılayabilmelidir. bu işlevsel gereksinim mi işlevsel olmayan mı "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Giriş**  \nSistemin yanıt süresi ve işlem hacmi gibi kriterleri tanımlayan gereksinimler, işlevsel olmayan (non‑functional) gereksinimler kapsamında değerlendirilir.\n\n**Açıklama**  \nPerformans, işlevsel olmayan gereksinim türlerinden biridir ve “sistem hız, tepki süresi, işlem kapasitesi gibi kriterleri” tanımlar → (📄 PDF). Örneğin, “E‑devlet sistemi, kullanıcı sorgularına 2 saniyeden kısa sürede yanıt vermelidir” ifadesi bu tür bir gereksinime örnek olur → (📄 PDF). Dolayısıyla, “sistem belirli bir sürede yanıt vermeli, işlem hacmini karşılayabilmelidir” ifadesi işlevsel olmayan bir gereksinimdir.\n\n**Özet**  \nBu gereksinim, performans kategorisindeki işlevsel olmayan bir gereksinimdir.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Durum geçiş diyagramı bize ne anlatır "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Durum geçiş diyagramı**, sistemdeki olayların ne zaman gerçekleştiğini ve bu olayların hangi durumları tetiklediğini gösterir. Her diyagram bir **başlangıç durumu** ile başlar ve mutlaka bir **sonlanma durumu** içerir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "Varlıkların Eşleştirilmesi\nl A ve B gibi iki varlık kümesi arasındaki R\nbağıntı kümesi için eşleme durumları:\nl 1:1 (birden-bire) ne anlama gelir "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Varlıkların Eşleştirilmesi – 1:1 (birden‑bire) eşleme durumu**\n\n1:1 (birden‑bire) eşleme, A ve B varlık kümeleri arasındaki R bağıntısının her bir varlığının yalnızca tek bir karşılıkla ilişkilendiği anlamına gelir. Yani:\n\n- **A kümesindeki her bir varlık**, B kümesindeki **tam olarak bir** varlıkla eşleşir.  \n- **B kümesindeki her bir varlık** ise A kümesindeki **tam olarak bir** varlıkla eşleşir.  \n\nBu durum, iki varlık kümesi arasında karşılıklı tek‑tek bir ilişki kurulduğunu gösterir. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var pdf teki konu ile nasıl bir ilişkisi var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151545.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görseldeki İçerik ve PDF’deki Konuyla İlişkisi**\n\nGörsel, bir şirket veritabanını modellemek için hazırlanmış bir **Entity‑Relationship (ER) diyagramı**dır. Diyagramda dört varlık (entity) bulunur: **EMPLOYEE**, **DEPARTMENT**, **PROJECT** ve **DEPENDENT**; her varlığın ilgili nitelikleri (attributes) elipslerle gösterilmiştir (ör. `Fname`, `Ssn`, `Salary` vb.) → (🖼️ Görüntü).  \n\nVarlıklar arasındaki ilişkiler (relationships) eşkenar dörtgenlerle tasvir edilmiştir ve kardinaliteleri (1:N, M:N, 1:1) ilişki çizgileri üzerindedir. Örneğin, **SUPERVISION** ilişkisi iki EMPLOYEE varlığı arasında 1:N, **WORKS_FOR** ilişkisi EMPLOYEE‑DEPARTMENT arasında N:1, **MANAGES** ilişkisi 1:1, **WORKS_ON** ilişkisi M:N, **CONTROLS** ilişkisi DEPARTMENT‑PROJECT arasında 1:N, **DEPENDENTS_OF** ilişkisi EMPLOYEE‑DEPENDENT arasında 1:N olarak gösterilmiştir → (🖼️ Görüntü).  \n\nPDF belgesi, “ŞİRKET Veritabanı için E‑R Diyagramı” başlığı altında **ER diyagramı öğelerini** (varlık, nitelik, zayıf varlık, türemiş nitelik, anahtar nitelik, çok değerli nitelik) ve **yapısal çözümleme ve modelleme yöntemlerini** (Veri Akış Diyagramı, Varlık‑İlişki Diyagramları vb.) listeler → (📄 PDF). Görseldeki ER diyagramı, bu PDF’de tanımlanan kavramların bir uygulama örneği olarak, şirket veritabanı tasarımında varlıklar, nitelikler ve ilişkilerin nasıl görselleştirileceğini göstermektedir.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "MANAGES  hangi varlıklara bağlı "
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**MANAGES ilişkisi hangi varlıklara bağlanır?**\n\n❌ Bu konuda kaynaklarda bilgi bulunamadı.\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "bu görselde ne var pdf ile nasıl bir ilişkisi var ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Görselin içeriği**\n\nGörselde, bir öğrencinin burs alıp almayacağını belirlemek için kullanılan bir **karar ağacı diyagramı** yer alıyor. Diyagramda:\n\n- İlk düğüm: “Disiplin cezası almış” → Evet → “Burs alamaz”, Hayır → “Not ortalaması > 70” düğümüne geçiş. → (🖼️ Görüntü)  \n- İkinci düğüm: “Not ortalaması > 70” → Evet/Hayır → “Giriş puanı > Giriş ortalaması” düğümüne geçiş. → (🖼️ Görüntü)  \n- Üçüncü düğüm (Not ortalaması > 70 ise): “Giriş puanı > Giriş ortalaması” → Evet → “Okul süresince yarım burs”, Hayır → “Okul süresince tam burs”. → (🖼️ Görüntü)  \n- Üçüncü düğüm (Not ortalaması ≤ 70 ise): “Giriş puanı > Giriş ortalaması” → Evet → “1 yıl yarım burs”, Hayır → “Burs alamaz”. → (🖼️ Görüntü)\n\n**PDF ile ilişkisi**\n\nPDF kaynağı, **ŞİRKET Veritabanı için E‑R Diyagramı**, VAD (Veri Akış Diyagramı) sembolleri ve varlık‑ilişki modelleme yöntemlerini içeriyor. Bu belgede karar ağacı gibi bir diyagramdan bahsedilmemiş; PDF daha çok **varlık‑ilişki diyagramları** ve **veri akış diyagramları** gibi modelleme araçlarını tanımlıyor. → (📄 PDF)\n\nDolayısıyla, görseldeki karar ağacı PDF’de yer alan E‑R veya VAD diyagramlarından farklı bir modelleme tekniğidir; ikisi de sistem analizi ve modellemede kullanılan diyagram türleri olsa da, görseldeki içerik PDF"
+    },
+    {
+      "rol": "user",
+      "icerik": "hayır karar ağacı var bir daha kontrol et ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Karar Ağacı Mevcuttur**\n\nKaynaklarda, burs alıp alamayacağını ve alacağı burs türünü belirlemek için kullanılan bir karar ağacı (karar ağacı) bulunmaktadır. Görüntü analizinde bu ağaç, koşullara göre dallanan düğümler ve sonuçları gösteren bir akış diyagramı olarak tanımlanmıştır. → (🖼️ Görüntü)\n\n**Ağacın Özeti**\n\n1. **Disiplin cezası almış?**  \n   - **Evet** → “Burs alamaz”.  \n   - **Hayır** → “Not ortalaması > 70” düğümüne geçer.\n\n2. **Not ortalaması > 70?**  \n   - **Evet** → “Giriş puanı > Giriş ortalaması” düğümüne geçer.  \n   - **Hayır** → “Burs alamaz”.\n\n3. **Giriş puanı > Giriş ortalaması?** (Not ortalaması > 70 iken)  \n   - **Evet** → “Okul süresince yarım burs”.  \n   - **Hayır** → “Okul süresince tam burs”.\n\n4. **Giriş puanı > Giriş ortalaması?** (Not ortalaması ≤ 70 iken)  \n   - **Evet** → “1 yıl yarım burs”.  \n   - **Hayır** → “Burs alamaz”.\n\nBu yapı, disiplin cezası, not ortalaması ve giriş puanı gibi kriterlere göre burs kararını adım adım belirler.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✗] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "pdf te karar ağacı var mı kontrol et ve resim ile nasıl bir ilişki var bana anlat ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Karar ağacı PDF’de bulunuyor mu?**  \nPDF’de “Karar tabloları” (decision tables) hakkında bilgi var; karar ağacı (decision tree) ifadesi yer almıyor. → (📄 PDF)  \n\n**Görseldeki karar ağacı nedir?**  \nGörselde bir **akış diyagramı** (flowchart) bulunuyor ve bu diyagram, “burs alma” koşullarını belirleyen bir **karar ağacı** yapısını temsil ediyor. Düğümler karar noktalarını, oklar “Evet/Hayır” yollarını gösteriyor; sonuçlar ise “Burs alamaz”, “Yarım burs”, “Tam burs” gibi çıktılar. → (🖼️ Görüntü)  \n\n**PDF ile görsel arasındaki ilişki**  \n- **PDF**: Kararları tablo biçiminde (satırlar koşul, sütunlar işlem) modelleyen “karar tabloları” yöntemini tanımlıyor. → (📄 PDF)  \n- **Görsel**: Kararları dallanan bir ağaç şeklinde (akış diyagramı) gösteren bir **karar ağacı** örneği sunuyor. → (🖼️ Görüntü)  \n\nHer iki kaynak da karar verme süreçlerini modellemek için kullanılan yöntemleri (tablo vs. ağaç) açıklasa da, PDF’de doğrudan bir karar ağacı bulunmamaktadır; görsel ise karar ağacını somut bir örnek olarak göstermektedir.  \n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    },
+    {
+      "rol": "user",
+      "icerik": "karar tabloları olarak geçiyor pdf i bir daha kontrol et ",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**Karar tabloları PDF’de yer alıyor**\n\nPDF’de “Karar tabloları” başlığı altında, karar tablolarının yazılım akışındaki dallanmaları ve koşulları daha düzenli göstermek için kullanıldığı, satırlara koşullar, sütunlara yapılacak işlemler ve kurallara ait numaralar konulduğu, her koşulun “Evet‑Hayır”, “Doğru‑Yanlış” gibi yanıtlarla ifade edildiği belirtilmiştir. Ayrıca karar tablolarının kod içinde iç içe `if` ifadeleri, `switch` ya da `case` yapılarıyla gerçekleştirilebileceği de vurgulanmıştır. → (📄 PDF)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✗]"
+    },
+    {
+      "rol": "user",
+      "icerik": "tamam yer alıyorsa bu resim ile ilişkisini anlatır mısın",
+      "goruntu": "C:\\Users\\merve\\Desktop\\miuul_generative_ai\\Multimodal Assistant\\multimodal-rag\\week2_multimodal\\data\\Ekran görüntüsü 2026-06-28 151827.png"
+    },
+    {
+      "rol": "assistant",
+      "icerik": "**İlişki hakkında bilgi**\n\nVerilen kaynaklarda VAD simgeleri, E‑R diyagramı ve karar ağacı (burs koşulları) ayrı ayrı tanımlanmıştır, ancak bu iki içerik arasında doğrudan bir bağlantı ya da ilişkiye dair bir açıklama bulunmamaktadır.  \n\n❌ **Bu konuda kaynaklarda bilgi bulunamadı.** → (📄 PDF) → (🖼️ Görüntü)\n\n---\n📊 Kullanılan kaynaklar: [PDF: ✓] [Ses: ✗] [Görüntü: ✓]"
+    }
   ]
 }

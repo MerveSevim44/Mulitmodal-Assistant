@@ -58,8 +58,27 @@ vektor_db = Chroma.from_documents(
 print("Belgeler ChromaDB'ye kaydedildi!")
 print(f"Toplam vektör sayısı: {vektor_db._collection.count()}")
 
+def _mevcut_dosyayi_sil(dosya_yolu: str, konu_id: str = None) -> None:
+    """Aynı dosya bu konuya daha önce yüklenmişse eski chunk'larını siler."""
+    try:
+        mevcut = vektor_db.get(where={
+            "$and": [
+                {"konu_id": konu_id or ""},
+                {"dosya": os.path.basename(dosya_yolu)}
+            ]
+        })
+    except Exception as e:
+        print(f"Yinelenen kontrol hatası: {e}")
+        return
+
+    if mevcut and mevcut.get("ids"):
+        print(f"⚠️ Bu dosya zaten yüklü ({len(mevcut['ids'])} chunk), önce siliniyor...")
+        vektor_db.delete(ids=mevcut["ids"])
+
+
 def ses_yukle(dosya_yolu: str, ders_adi: str, ders_id: str, konu_adi: str = None, konu_id: str = None) -> None:
     """Ses dosyasını metne çevirip ChromaDB'ye kaydeder"""
+    _mevcut_dosyayi_sil(dosya_yolu, konu_id)
     sonuc = ses_to_metin(dosya_yolu)
     tam_metin = sonuc["tam_metin"]
     
@@ -83,6 +102,7 @@ def ses_yukle(dosya_yolu: str, ders_adi: str, ders_id: str, konu_adi: str = None
 
 
 def pdf_yukle(dosya_yolu: str, ders_adi: str, ders_id: str, konu_adi: str = None, konu_id: str = None) -> None:
+    _mevcut_dosyayi_sil(dosya_yolu, konu_id)
     reader = PdfReader(dosya_yolu)
     print(f"Toplam sayfa: {len(reader.pages)}")
     
@@ -115,7 +135,8 @@ def pdf_yukle(dosya_yolu: str, ders_adi: str, ders_id: str, konu_adi: str = None
 
 def goruntu_yukle(dosya_yolu: str, ders_adi: str, ders_id: str, konu_adi: str = None, konu_id: str = None) -> None:
     from week2_multimodal.vision import goruntu_analiz
-    
+
+    _mevcut_dosyayi_sil(dosya_yolu, konu_id)
     print(f"Görüntü analiz ediliyor: {dosya_yolu}")
     metin = goruntu_analiz(dosya_yolu)
     
