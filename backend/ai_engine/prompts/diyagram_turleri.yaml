@@ -1,0 +1,46 @@
+# prompts/diyagram_turleri.yaml
+turler:
+  - ad: Akış diyagramı (flowchart)
+    isaretler: |
+      dikdörtgenler işlemleri, eşkenar dörtgenler kararları gösterir. 
+      Ok etiketleri genellikle YOK ya da "evet/hayır" gibi karar yanıtları. 
+      İşlem sırasını anlatır (önce şunu yap, sonra şunu yap).
+  
+  - ad: Durum geçiş diyagramı (state diagram)
+    isaretler: |
+      YUVARLATILMIŞ köşeli kutular DURUMLARI gösterir (isim genellikle "-ing" 
+      veya durum belirten kelimedir: Reading, Waiting, Processing, Idle, Active). 
+      Oklar ÜZERİNDE TETİKLEYİCİ OLAY etiketi vardır (Card Read Successfully, 
+      Button Pressed, Timeout gibi). Siyah dolu daire başlangıç durumu, 
+      içi dolu çemberli daire bitiş durumu. Sistem davranışını/yaşam döngüsünü 
+      modeller (ATM, çamaşır makinesi, trafik ışığı gibi).
+  
+  - ad: E-R diyagramı
+    isaretler: |
+      Dikdörtgenler varlıkları (entity), eşkenar dörtgenler ilişkileri (relationship), 
+      elipsler nitelikleri (attribute) gösterir. Kardinaliteler (1:N, M:N) çizgilerde yazılı.
+  
+  - ad: Sınıf diyagramı (UML class diagram)
+    isaretler: |
+      Üç bölmeli dikdörtgen kutular: üst bölme sınıf adı, orta nitelikler, alt metodlar. 
+      Kutular arası ilişki çizgileri (kalıtım, kompozisyon) elmas/üçgen uçludur.
+  
+  - ad: Karar ağacı (decision tree)
+    isaretler: |
+      Tek bir kökten dallanan ağaç yapısı. Her düğüm bir koşul/soru, 
+      dallar evet/hayır veya değer aralıkları, yapraklar sonuç/sınıf.
+  
+  - ad: Veri akış diyagramı (DFD)
+    isaretler: |
+      Daireler/yuvarlaklar süreçleri (process), paralel iki çizgi veri depolarını, 
+      dikdörtgenler dış varlıkları gösterir. Oklar VERİ akışını taşır.
+  
+  - ad: Linked list
+    isaretler: |
+      Yatay/dikey kutu zinciri. Her kutu iki bölmeli (data + next), 
+      "next" oku bir sonraki kutuyu gösterir, son kutuda "null".
+  
+  - ad: Binary tree / ağaç veri yapısı
+    isaretler: |
+      Tek kökten aşağı dallanan, her düğümün en fazla iki çocuğu olan ağaç. 
+      Düğümler genellikle daire içinde sayı/harf.

@@ -1,0 +1,102 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 24px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.uploadArea {
+  margin-bottom: 24px;
+}
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 32px 20px;
+  background: rgba(18, 18, 28, 0.5);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.uploadBox:hover {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.uploadIcon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.uploadText {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.uploadSubtext {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 8px;
+}
+
+.materialItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.materialIcon {
+  font-size: 24px;
+}
+
+.materialInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.materialName {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.materialMeta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: 40px;
+}

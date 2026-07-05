@@ -1,0 +1,59 @@
+# ============================================================
+# BACKEND — requirements.txt
+# Akademik Bellek Asistanı API Server
+# ============================================================
+
+# --- Web Framework ---
+fastapi==0.115.9
+uvicorn[standard]==0.34.2
+python-multipart==0.0.20
+
+# --- Supabase ---
+supabase==2.15.2
+PyJWT==2.10.1
+
+# --- Configuration ---
+pydantic-settings==2.9.1
+python-dotenv==1.1.0
+
+# --- AI / RAG Framework ---
+langchain==0.3.25
+langchain-community==0.3.24
+langchain-core==0.3.59
+langchain-groq==0.2.5
+
+# --- Vector Database ---
+langchain-postgres==0.0.12
+psycopg2-binary==2.9.9
+
+# --- Embeddings ---
+sentence-transformers==4.1.0
+langchain-huggingface==0.1.0
+
+# --- LLM / API Clients ---
+groq==0.13.0
+openai==1.55.3
+
+# --- Speech-to-Text ---
+pydub==0.25.1
+soundfile==0.12.1
+librosa==0.10.2
+imageio-ffmpeg==0.5.1
+
+# --- Vision ---
+Pillow==11.2.1
+PyYAML==6.0.2
+
+# --- Document Processing ---
+pypdf==5.4.0
+pdfplumber==0.11.6
+
+# --- ML Core ---
+torch==2.2.2
+torchvision==0.17.2
+numpy==1.26.4
+
+# --- Utilities ---
+huggingface-hub==0.30.2
+tqdm==4.67.1
+requests==2.32.3
