@@ -163,6 +163,21 @@ GROQ_API_KEY=your_groq_api_key_here
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 ```
 
+Backend/frontend stack'i (FastAPI + Next.js) çalıştıracaksan ayrıca
+`backend/.env.example` dosyasını `backend/.env` olarak kopyalayıp Supabase
+anahtarlarını doldur.
+
+### 6️⃣ Supabase (veritabanı, auth, storage)
+Şema — tablolar, RLS politikaları, storage bucket'ları — `supabase/migrations/`
+altında sürüm kontrolünde tutulur. Kurulum, lokal geliştirme (`npm run db:start`),
+şema çekme ve **duraklatılmış projeyi kurtarma** adımları için:
+**[supabase/README.md](supabase/README.md)**
+
+> ℹ️ Supabase Free plan, 7 gün istek almayan projeyi otomatik duraklatır.
+> `.github/workflows/supabase-keepalive.yml` bunu 3 günde bir ping atarak
+> engeller; çalışması için repo secret'ları `SUPABASE_URL` ve `SUPABASE_ANON_KEY`
+> tanımlı olmalı.
+
 ---
 
 ## 💻 Kullanım
@@ -262,6 +277,8 @@ Soru → kaynak_belirle() (anahtar kelimeyle PDF/Ses/Görüntü yönlendirmesi)
 | `diyagram_turleri.yaml not found` | `multimodal-rag/prompts/` klasörünün yerinde olduğundan emin ol |
 | ChromaDB bozuldu | `multimodal-rag/week1_rag/chroma_db/` klasörünü sil ve materyalleri yeniden yükle |
 | Port kullanımda | `streamlit run main.py --server.port 8502` |
+| Supabase istekleri zaman aşımına uğruyor / proje "paused" | Dashboard'dan **Resume project**; detaylar [supabase/README.md](supabase/README.md) |
+| Login çalışıyor ama API 401 dönüyor | `backend/.env` içindeki `SUPABASE_JWT_SECRET` dashboard'daki değerle aynı mı kontrol et |
 
 ---
 

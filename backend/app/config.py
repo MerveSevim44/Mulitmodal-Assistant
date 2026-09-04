@@ -60,11 +60,12 @@ class Settings(BaseSettings):
     RETRIEVAL_FETCH_K: int = 25
 
     class Config:
-        env_file = (
-            os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                ".env"
-            )
+        # Defaults to backend/.env. Point ENV_FILE at another file (e.g. .env.local
+        # for the local `supabase start` stack) to switch environments without
+        # editing this file. Relative paths resolve against the backend/ directory.
+        env_file = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            os.environ.get("ENV_FILE", ".env")
         )
         env_file_encoding = "utf-8"
         extra = "ignore"

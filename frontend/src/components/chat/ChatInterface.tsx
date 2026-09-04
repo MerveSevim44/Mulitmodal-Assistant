@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { getChatHistory, clearChatHistory } from "@/lib/api";
 import { streamChat } from "@/lib/stream";
 import styles from "./chat.module.css";
-import ReactMarkdown from "react-markdown";
+import MarkdownMessage from "./MarkdownMessage";
 
 interface Message {
   id: string;
@@ -137,7 +137,7 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
                 }`}
               >
                 <div className={`${styles.messageBubble} ${styles[msg.role]}`}>
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <MarkdownMessage content={msg.content} />
                   
                   {msg.role === "assistant" && msg.metadata?.sources && (
                     <div className={styles.sources}>
@@ -153,7 +153,7 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
             {isStreaming && (
               <div className={`${styles.messageWrapper} ${styles.assistantWrapper}`}>
                 <div className={`${styles.messageBubble} ${styles.assistant}`}>
-                  <ReactMarkdown>{streamingToken}</ReactMarkdown>
+                  <MarkdownMessage content={streamingToken} />
                   <span className="cursor-blink" />
                 </div>
               </div>

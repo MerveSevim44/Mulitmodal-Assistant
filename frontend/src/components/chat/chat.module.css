@@ -132,3 +132,31 @@
   padding: 14px 20px;
   background: var(--bg-primary);
 }
+
+/* ── Matematik (KaTeX) ────────────────────────────────────────── */
+.messageBubble :global(.katex) {
+  font-size: 1.05em;
+}
+
+/* Blok formüller: ortalanmış, kendi içinde yatay kaydırılabilir */
+.messageBubble :global(.katex-display) {
+  margin: 12px 0;
+  padding: 10px 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.messageBubble :global(.katex-display) > :global(.katex) {
+  white-space: normal;
+}
+
+/* Satır içi formüller satır yüksekliğini bozmasın */
+.messageBubble :global(.katex-display) :global(.katex-html) {
+  display: inline-block;
+  min-width: 100%;
+}
+
+/* Kullanıcı balonunda beyaz metin — formül de beyaz olsun */
+.user :global(.katex) {
+  color: white;
+}

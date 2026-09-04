@@ -3,7 +3,6 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { getMaterials, deleteMaterial, uploadMaterial } from "@/lib/api";
-import { streamChat, getChatHistory } from "@/lib/api"; // wait, we need to export streamChat in api.ts? Actually streamChat is in stream.ts.
 import styles from "./topic.module.css";
 import ChatInterface from "@/components/chat/ChatInterface";
 import MaterialsSidebar from "@/components/materials/MaterialsSidebar";

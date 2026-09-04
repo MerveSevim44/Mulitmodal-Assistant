@@ -23,7 +23,7 @@ llm = ChatGroq(
     max_tokens=int(os.getenv("LLM_MAX_TOKENS", "1000")),
 )
 
-prompt_template = ChatPromptTemplate.from_template("""
+prompt_template = ChatPromptTemplate.from_template(r"""
 <rol>
 Sen bir akademik öğretmen asistanısın. Görevin, öğrencinin sorusunu YALNIZCA aşağıdaki kaynak bloklarına dayanarak yanıtlamak. Kaynak dışına çıkmazsın.
 </rol>
@@ -71,7 +71,17 @@ Cevap yazmadan önce kendine sor (bunları YAZMA, sadece düşün):
 
 6. SES KAYDI: Ham ve gürültülü olabilir. Kopyalama; anlamlı kısmı 2-3 cümleyle temiz Türkçeyle özetle. Anlaşılmıyorsa "⚠️ Ses kaydı bu konuda net bilgi içermiyor." yaz.
 
-7. FORMÜL: Önce formülü yaz, sonra her terimi tek satırda açıkla.
+7. FORMÜL (LaTeX ZORUNLU): Matematiksel her ifadeyi LaTeX ile yaz. Düz metin/Unicode matematik yazma.
+   - Blok (kendi satırında duran) formül: boş satırla ayrılmış `$$ ... $$` kullan.
+   - Satır içi formül/sembol: `$ ... $` kullan. Örn: $a_0$, $\omega_0$, $c_k=\sqrt{{a_k^2+b_k^2}}$.
+   - ASLA `\[ ... \]`, `\( ... \)` veya çıplak `[ ... ]` sınırlayıcısı kullanma; yalnızca `$` ve `$$`.
+   - Ters bölüleri kırpma: \int, \sum, \frac, \sqrt, \cos, \sin, \tan, \infty, \, aynen yazılır.
+   - Alt/üst simgeler süslü parantezli: `a_{{k}}`, `\omega_{{0}}`, `k^{{2}}`.
+   - Kaynak etiketini (📄 PDF vb.) formülün DIŞINA, sonraki satıra koy — `$$` bloğunun içine yazma.
+   - Formülden sonra her terimi tek satırda, satır içi LaTeX ile açıkla.
+   Örnek:
+   $$x(t)=a_{{0}}+\sum_{{k=1}}^{{\infty}}\left[a_{{k}}\cos(k\omega_{{0}}t)+b_{{k}}\sin(k\omega_{{0}}t)\right]$$
+   Burada $a_0$ ortalama bileşen, $\omega_0$ temel açısal frekanstır. → (📄 PDF)
 
 8. EKSİK BİLGİ: Blokta kısmi bilgi varsa "⚠️ Kaynakta eksik bilgi var: [bildiklerin]. Kaynağı güncellemeni öneririm." yaz — ama elindeki kısmı tam ver.
 </kesin_kurallar>

@@ -1,0 +1,53 @@
+name: Supabase Keep-Alive
+
+# Supabase Free plan pauses a project after 7 days without requests.
+# This job touches the REST API every 3 days so the project stays active.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   SUPABASE_URL       https://<project-ref>.supabase.co
+#   SUPABASE_ANON_KEY  the anon/publishable key (NEVER the service_role key)
+#
+# Note: GitHub disables scheduled workflows in repositories with no commit
+# activity for 60 days. If the repo goes quiet, re-enable this workflow from
+# the Actions tab (or just run it once via "Run workflow").
+
+on:
+  schedule:
+    # 06:00 UTC every 3rd day of the month — comfortably inside the 7-day window.
+    - cron: "0 6 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_URL}" ] || [ -z "${SUPABASE_ANON_KEY}" ]; then
+            echo "::error::SUPABASE_URL and SUPABASE_ANON_KEY repository secrets are not set."
+            exit 1
+          fi
+
+          # A minimal read against a known table. RLS keeps anon from seeing any
+          # rows, which is fine — the point is that the project serves a request.
+          status=$(curl -sS -o /tmp/body.txt -w '%{http_code}' \
+            --max-time 30 --retry 3 --retry-delay 10 --retry-connrefused \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL}/rest/v1/courses?select=id&limit=1")
+
+          echo "HTTP ${status}"
+          head -c 500 /tmp/body.txt || true
+          echo
+
+          # 2xx and 4xx both prove the project is awake and answering.
+          # 000 (no response) or 5xx means it is paused, down, or misconfigured.
+          case "${status}" in
+            2*|4*) echo "Project is awake." ;;
+            *) echo "::error::Unexpected status ${status} — project may be paused or unreachable."; exit 1 ;;
+          esac
