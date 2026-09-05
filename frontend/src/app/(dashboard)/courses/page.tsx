@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Plus, Trash2 } from "lucide-react";
 import { getCourses, createCourse, deleteCourse } from "@/lib/api";
 import styles from "./courses.module.css";
 
@@ -11,6 +12,21 @@ interface Course {
   topic_count: number;
   created_at: string;
 }
+
+/**
+ * Her ders bir kağıt sayfası gibi görünüyor; renk ve eğim sıradan türetiliyor,
+ * böylece aynı ders her yüklemede aynı yerde aynı renkte duruyor.
+ */
+const PAPERS = [
+  { bg: "#EDEAFB", fold: "#D5CDF5", title: "#4B3FAE", meta: "#8A7FD6" },
+  { bg: "#E3F0FC", fold: "#C4DFF5", title: "#2A6FA8", meta: "#5C97C4" },
+  { bg: "#FCEAE3", fold: "#F5CFBC", title: "#B14E31", meta: "#D68868" },
+  { bg: "#E7F4EA", fold: "#C6E5CF", title: "#2F7D4F", meta: "#6BA783" },
+  { bg: "#FBDCE9", fold: "#F3C2D8", title: "#C2447A", meta: "#D782A6" },
+  { bg: "#FCF3DD", fold: "#F0DFAF", title: "#96702A", meta: "#C0A05C" },
+];
+
+const ROTATIONS = ["-2.2deg", "1.6deg", "-1deg", "2deg"];
 
 export default function CoursesPage() {
   const router = useRouter();
@@ -76,15 +92,11 @@ export default function CoursesPage() {
         <div>
           <h1>🎓 Akademik Bellek Asistanı</h1>
           <p className={styles.subtitle}>
-            Derslerini seç veya yeni ders oluştur
+            {courses.length === 0
+              ? "Başlamak için ilk dersini oluştur"
+              : "Derslerini seç veya yeni ders oluştur"}
           </p>
         </div>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowCreate(!showCreate)}
-        >
-          ➕ Yeni Ders
-        </button>
       </div>
 
       {showCreate && (
@@ -116,43 +128,61 @@ export default function CoursesPage() {
 
       <div className="label mt-lg">// Derslerim</div>
 
-      {courses.length === 0 ? (
-        <div className={styles.empty}>
-          <p>📚 Henüz ders yok</p>
-          <p className={styles.emptyHint}>
-            Yukarıdaki &quot;Yeni Ders&quot; butonuna tıklayarak başla
-          </p>
-        </div>
-      ) : (
-        <div className={styles.grid}>
-          {courses.map((course, i) => (
+      <div className={styles.grid}>
+        {courses.map((course, i) => {
+          const paper = PAPERS[i % PAPERS.length];
+          return (
             <div
               key={course.id}
-              className={`card card-interactive ${styles.courseCard}`}
-              style={{ animationDelay: `${i * 50}ms` }}
+              className={styles.paper}
+              role="button"
+              tabIndex={0}
+              style={
+                {
+                  "--paper-bg": paper.bg,
+                  "--paper-fold": paper.fold,
+                  "--paper-title": paper.title,
+                  "--paper-meta": paper.meta,
+                  "--rot": ROTATIONS[i % ROTATIONS.length],
+                  animationDelay: `${i * 50}ms`,
+                } as React.CSSProperties
+              }
               onClick={() => router.push(`/courses/${course.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  router.push(`/courses/${course.id}`);
+                }
+              }}
             >
-              <div className={styles.cardContent}>
-                <span className={styles.cardIcon}>📚</span>
-                <div className="card-title">{course.name}</div>
-                <div className="card-meta">
-                  {course.topic_count || 0} konu
-                </div>
-              </div>
               <button
-                className="btn btn-icon btn-ghost"
+                className={styles.delBtn}
+                aria-label={`${course.name} dersini sil`}
+                title="Dersi sil"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(course.id, course.name);
                 }}
-                title="Dersi sil"
               >
-                🗑
+                <Trash2 size={12} />
               </button>
+              <div className={styles.paperTitle}>{course.name}</div>
+              <div className={styles.paperMeta}>{course.topic_count || 0} konu</div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+
+        <button
+          type="button"
+          className={styles.newCard}
+          onClick={() => setShowCreate(true)}
+        >
+          <span className={styles.newPlus}>
+            <Plus size={15} strokeWidth={2.2} />
+          </span>
+          <span className={styles.newLabel}>yeni ders</span>
+        </button>
+      </div>
     </div>
   );
 }
