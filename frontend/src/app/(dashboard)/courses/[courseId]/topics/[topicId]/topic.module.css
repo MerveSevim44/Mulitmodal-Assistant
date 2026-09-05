@@ -1,7 +1,7 @@
 .workspace {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 64px); /* Adjusting for layout padding */
+  height: calc(100vh - 88px); /* 20px layout padding + 24px board padding, both sides */
   animation: fadeIn 0.3s ease-out;
 }
 

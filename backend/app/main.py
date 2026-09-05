@@ -17,7 +17,7 @@ if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
 from app.config import get_settings
-from app.routers import health, courses, topics, materials, chat
+from app.routers import health, courses, topics, materials, chat, overview
 
 
 @asynccontextmanager
@@ -59,7 +59,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS.split(","),
+    allow_origins=[o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()],
+    # Accept any local dev origin (localhost / 127.0.0.1 on any port), so a
+    # frontend started on a fallback port still passes preflight.
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -75,6 +78,7 @@ app.include_router(courses.router, prefix=API_PREFIX)
 app.include_router(topics.router, prefix=API_PREFIX)
 app.include_router(materials.router, prefix=API_PREFIX)
 app.include_router(chat.router, prefix=API_PREFIX)
+app.include_router(overview.router, prefix=API_PREFIX)
 
 
 # ── Root Redirect ──────────────────────────────────────────────

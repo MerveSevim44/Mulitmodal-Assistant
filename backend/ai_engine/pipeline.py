@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import AIMessageChunk
 from dotenv import load_dotenv
 
-from ai_engine.retriever import retrieve_text, get_vector_db
+from ai_engine.retriever import retrieve_text, retrieve_documents, get_vector_db
 from ai_engine.vision import analyze_image
 
 load_dotenv()
@@ -120,6 +120,59 @@ def detect_source(question: str) -> Optional[str]:
     return None
 
 
+# ── CONTEXT BUILDING ────────────────────────────────────────────
+
+def build_contexts(
+    question: str,
+    course_id: str = None,
+    topic_id: str = None,
+    image_path: str = None,
+) -> tuple[dict, list]:
+    """
+    Build the three source context blocks for the prompt.
+
+    Every source type is retrieved from the vector store independently so the
+    answer can label where each claim came from. An image attached to the
+    current message is analyzed live and placed ahead of the stored image
+    analyses for this topic.
+
+    Returns:
+        (contexts, image_files) where contexts has the keys 'pdf_baglam',
+        'ses_baglam' and 'goruntu_baglam', and image_files lists the stored
+        file names of the images whose analyses were used — so the caller can
+        show the reader the actual image the answer is describing.
+    """
+    pdf_docs = retrieve_text(
+        question, course_id=course_id, topic_id=topic_id, source_type="pdf_dokuman"
+    )
+    audio_docs = retrieve_text(
+        question, course_id=course_id, topic_id=topic_id, source_type="ses_kaydi"
+    )
+    image_results = retrieve_documents(
+        question, course_id=course_id, topic_id=topic_id, source_type="goruntu", k=3
+    )
+
+    image_parts = []
+    if image_path:
+        print("Analyzing image for query context...")
+        image_parts.append(analyze_image(image_path))
+
+    image_files = []
+    for doc in image_results:
+        image_parts.append(doc.page_content)
+        file_name = (doc.metadata or {}).get("dosya")
+        if file_name and file_name not in image_files:
+            image_files.append(file_name)
+
+    contexts = {
+        "pdf_baglam": pdf_docs or "Bu konuda PDF kaynağında bilgi bulunamadı.",
+        "ses_baglam": audio_docs or "Bu konuda ses kaydında bilgi bulunamadı.",
+        "goruntu_baglam": "\n\n".join(image_parts)
+        or "Bu konuda görüntü kaynağında bilgi bulunamadı.",
+    }
+    return contexts, image_files
+
+
 # ── SYNCHRONOUS PIPELINE ────────────────────────────────────────
 
 def run_pipeline(
@@ -146,35 +199,15 @@ def run_pipeline(
     """
     history = history or []
 
-    # Build context from each source
-    image_context = "Bu sorgu için görüntü analizi yapılmadı."
-    audio_context = "Bu konuda ses kaydında bilgi bulunamadı."
-    pdf_context = "Bu konuda PDF kaynağında bilgi bulunamadı."
-
-    if image_path:
-        print("Analyzing image for query context...")
-        image_context = analyze_image(image_path)
-
-    # Retrieve PDF and audio chunks separately
-    pdf_docs = retrieve_text(
-        question, course_id=course_id, topic_id=topic_id, source_type="pdf_dokuman"
+    contexts, _image_files = build_contexts(
+        question, course_id=course_id, topic_id=topic_id, image_path=image_path
     )
-    audio_docs = retrieve_text(
-        question, course_id=course_id, topic_id=topic_id, source_type="ses_kaydi"
-    )
-
-    if pdf_docs:
-        pdf_context = pdf_docs
-    if audio_docs:
-        audio_context = audio_docs
 
     chain = prompt_template | llm
     result = chain.invoke({
         "history": "\n".join(history[-10:]),
-        "pdf_baglam": pdf_context,
-        "ses_baglam": audio_context,
-        "goruntu_baglam": image_context,
         "question": question,
+        **contexts,
     })
 
     # Update conversation history
@@ -193,6 +226,7 @@ async def stream_pipeline(
     image_path: str = None,
     audio_path: str = None,
     history: list = None,
+    image_files_out: list = None,
 ) -> AsyncGenerator[str, None]:
     """
     Run the RAG pipeline with streaming token output.
@@ -206,39 +240,27 @@ async def stream_pipeline(
         image_path: Path to active image (if included)
         audio_path: Path to active audio (if included)
         history: Previous conversation turns
+        image_files_out: If given, the stored file names of the images used as
+            context are appended to it before the first token is yielded. A
+            generator can only yield tokens, so this is how the caller learns
+            which images to show alongside the answer.
 
     Yields:
         Individual text tokens
     """
     history = history or []
 
-    # Build context (same as sync pipeline)
-    image_context = "Bu sorgu için görüntü analizi yapılmadı."
-    audio_context = "Bu konuda ses kaydında bilgi bulunamadı."
-    pdf_context = "Bu konuda PDF kaynağında bilgi bulunamadı."
-
-    if image_path:
-        image_context = analyze_image(image_path)
-
-    pdf_docs = retrieve_text(
-        question, course_id=course_id, topic_id=topic_id, source_type="pdf_dokuman"
+    contexts, image_files = build_contexts(
+        question, course_id=course_id, topic_id=topic_id, image_path=image_path
     )
-    audio_docs = retrieve_text(
-        question, course_id=course_id, topic_id=topic_id, source_type="ses_kaydi"
-    )
-
-    if pdf_docs:
-        pdf_context = pdf_docs
-    if audio_docs:
-        audio_context = audio_docs
+    if image_files_out is not None:
+        image_files_out.extend(image_files)
 
     # Build the chain input
     chain_input = {
         "history": "\n".join(history[-10:]),
-        "pdf_baglam": pdf_context,
-        "ses_baglam": audio_context,
-        "goruntu_baglam": image_context,
         "question": question,
+        **contexts,
     }
 
     # Stream tokens using LangChain's async streaming

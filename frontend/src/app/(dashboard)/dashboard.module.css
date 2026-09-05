@@ -1,57 +1,151 @@
 .layout {
   display: flex;
   min-height: 100vh;
+  background: var(--bg-page-gradient);
+  padding: 20px;
+  gap: 20px;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────── */
 
 .sidebar {
-  width: 260px;
-  min-width: 260px;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border);
+  width: 230px;
+  min-width: 230px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 20px;
 }
 
 .sidebarHeader {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 8px;
-  margin-bottom: 8px;
+  margin-bottom: 28px;
 }
 
 .logo {
-  font-size: 28px;
+  height: 36px;
+  width: 36px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .logoText {
-  font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
-  letter-spacing: 0.02em;
 }
 
 .nav {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .navItem {
-  justify-content: flex-start !important;
-  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
   font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
+
+.navItem:hover:not(:disabled) {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.navItemActive {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* Routes that do not exist yet are visibly inert rather than dead links. */
+.navItem:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Review prompt card ──────────────────────────────────────── */
+
+.promptCard {
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+  background: var(--accent-soft);
+}
+
+.promptIcon {
+  margin: 0 auto 12px;
+  height: 48px;
+  width: 48px;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.promptTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.promptHint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 4px 0 12px;
+}
+
+.promptButton {
+  width: 100%;
+  border-radius: var(--radius-md);
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-on-accent);
+  background: var(--text-primary);
+  border: none;
+  cursor: pointer;
+}
+
+.promptButton:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.promptButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
 
 .sidebarFooter {
   border-top: 1px solid var(--border);
   padding-top: 12px;
+  margin-top: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -61,7 +155,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px;
+  padding: 4px;
 }
 
 .avatar {
@@ -69,12 +163,13 @@
   height: 32px;
   border-radius: 50%;
   background: var(--accent);
-  color: white;
+  color: var(--text-on-accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .email {
@@ -88,9 +183,14 @@
 
 /* ── Main Content ────────────────────────────────────────────── */
 
+/* The translucent board from the design: pages lay their own white panels and
+   cards on top of it, so it must not be opaque white itself. */
 .main {
   flex: 1;
-  background: var(--bg-primary);
-  padding: 32px;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: var(--radius-xl);
+  padding: 24px;
   overflow-y: auto;
+  max-height: calc(100vh - 40px);
 }

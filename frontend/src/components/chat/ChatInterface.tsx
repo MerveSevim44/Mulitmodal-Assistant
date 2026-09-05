@@ -1,29 +1,38 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getChatHistory, clearChatHistory } from "@/lib/api";
 import { streamChat } from "@/lib/stream";
 import styles from "./chat.module.css";
 import MarkdownMessage from "./MarkdownMessage";
+import MessageItem from "./MessageItem";
+import type { Message } from "./types";
 
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  metadata?: any;
-  created_at: string;
-}
+/** How close to the bottom still counts as "following along", in px. */
+const STICK_THRESHOLD = 80;
 
 export default function ChatInterface({ topicId }: { topicId: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [input, setInput] = useState("");
-  const [streamingToken, setStreamingToken] = useState("");
+  const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageAreaRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const loadHistory = async () => {
+  // Whether the reader is pinned to the bottom. A ref, not state: it changes on
+  // every scroll and must never itself cause a render.
+  const stickToBottomRef = useRef(true);
+  const scrollRafRef = useRef<number | null>(null);
+
+  // Tokens arrive far faster than the screen refreshes, so they are buffered
+  // here and flushed once per frame instead of re-rendering per token.
+  const pendingTokensRef = useRef("");
+  const flushRafRef = useRef<number | null>(null);
+
+  const loadHistory = useCallback(async () => {
     try {
       const { data } = await getChatHistory(topicId);
       setMessages(data.messages || []);
@@ -32,24 +41,57 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [topicId]);
 
   useEffect(() => {
     loadHistory();
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+      abortControllerRef.current?.abort();
+      if (scrollRafRef.current !== null) cancelAnimationFrame(scrollRafRef.current);
+      if (flushRafRef.current !== null) cancelAnimationFrame(flushRafRef.current);
     };
-  }, [topicId]);
+  }, [loadHistory]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // ── Scroll tracking ───────────────────────────────────────────
+  // One layout read per frame at most, and no state updates, so scrolling
+  // itself stays off the React render path entirely.
 
+  const handleScroll = useCallback(() => {
+    if (scrollRafRef.current !== null) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      const el = messageAreaRef.current;
+      if (!el) return;
+      const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+      stickToBottomRef.current = distanceFromBottom < STICK_THRESHOLD;
+    });
+  }, []);
+
+  // A new message was appended — animate down, but only if the reader was
+  // already at the bottom. Keyed on the count so re-renders that merely
+  // re-fetch the same messages do not re-trigger a scroll.
+  const messageCount = messages.length;
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, streamingToken]);
+    if (!stickToBottomRef.current) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messageCount]);
+
+  // While streaming, keep the tail in view with a direct, non-animated jump.
+  // `scrollIntoView({ behavior: "smooth" })` here would restart its animation
+  // on every flush and fight the user's own scrolling.
+  useEffect(() => {
+    if (!isStreaming || !stickToBottomRef.current) return;
+    const el = messageAreaRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [streamingText, isStreaming]);
+
+  const flushTokens = useCallback(() => {
+    flushRafRef.current = null;
+    const pending = pendingTokensRef.current;
+    if (!pending) return;
+    pendingTokensRef.current = "";
+    setStreamingText((prev) => prev + pending);
+  }, []);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,31 +102,41 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
 
     // Optimistically add user message
     const tempUserMsg: Message = {
-      id: Date.now().toString(),
+      id: `pending-${Date.now()}`,
       role: "user",
       content: userMessage,
       created_at: new Date().toISOString(),
     };
     setMessages((prev) => [...prev, tempUserMsg]);
+    // Sending is an explicit intent to follow the answer.
+    stickToBottomRef.current = true;
     setIsStreaming(true);
-    setStreamingToken("");
+    setStreamingText("");
+
+    const finish = () => {
+      if (flushRafRef.current !== null) {
+        cancelAnimationFrame(flushRafRef.current);
+        flushRafRef.current = null;
+      }
+      pendingTokensRef.current = "";
+      setIsStreaming(false);
+      loadHistory(); // Reload to get the saved message with DB ID and metadata
+      setStreamingText("");
+    };
 
     abortControllerRef.current = streamChat({
       topicId,
       message: userMessage,
       onToken: (token) => {
-        setStreamingToken((prev) => prev + token);
+        pendingTokensRef.current += token;
+        if (flushRafRef.current === null) {
+          flushRafRef.current = requestAnimationFrame(flushTokens);
+        }
       },
-      onDone: () => {
-        setIsStreaming(false);
-        loadHistory(); // Reload to get the saved message with DB ID and metadata
-        setStreamingToken("");
-      },
+      onDone: finish,
       onError: (error) => {
         console.error("Stream error:", error);
-        setIsStreaming(false);
-        loadHistory();
-        setStreamingToken("");
+        finish();
       },
     });
   };
@@ -114,7 +166,7 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
         )}
       </div>
 
-      <div className={styles.messageArea}>
+      <div className={styles.messageArea} ref={messageAreaRef} onScroll={handleScroll}>
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="spinner" />
@@ -130,30 +182,13 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
         ) : (
           <div className={styles.messageList}>
             {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`${styles.messageWrapper} ${
-                  msg.role === "user" ? styles.userWrapper : styles.assistantWrapper
-                }`}
-              >
-                <div className={`${styles.messageBubble} ${styles[msg.role]}`}>
-                  <MarkdownMessage content={msg.content} />
-                  
-                  {msg.role === "assistant" && msg.metadata?.sources && (
-                    <div className={styles.sources}>
-                      {msg.metadata.sources.pdf && <span className="badge badge-pdf">📄 PDF</span>}
-                      {msg.metadata.sources.audio && <span className="badge badge-audio">🎤 Ses</span>}
-                      {msg.metadata.sources.image && <span className="badge badge-image">🖼️ Görsel</span>}
-                    </div>
-                  )}
-                </div>
-              </div>
+              <MessageItem key={msg.id} message={msg} />
             ))}
-            
+
             {isStreaming && (
               <div className={`${styles.messageWrapper} ${styles.assistantWrapper}`}>
-                <div className={`${styles.messageBubble} ${styles.assistant}`}>
-                  <MarkdownMessage content={streamingToken} />
+                <div className={`${styles.messageBubble} ${styles.assistant} ${styles.streaming}`}>
+                  <MarkdownMessage content={streamingText} />
                   <span className="cursor-blink" />
                 </div>
               </div>

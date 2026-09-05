@@ -69,6 +69,22 @@ class Repository:
         )
         return len(response.data) > 0
 
+    def get_overview_tree(self, user_id: str) -> list[dict]:
+        """
+        Fetch every course with its topics and their material types.
+
+        One nested request, so the home dashboard does not have to issue a
+        topics call per course.
+        """
+        response = (
+            self.client.table("courses")
+            .select("id, name, created_at, topics(id, name, created_at, materials(type))")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return response.data
+
     # ── TOPICS ──────────────────────────────────────────────────
 
     def list_topics(self, course_id: str) -> list[dict]:

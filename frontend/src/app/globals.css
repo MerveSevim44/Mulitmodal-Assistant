@@ -1,39 +1,51 @@
 /* ============================================================
    DESIGN SYSTEM — Akademik Bellek Asistanı
-   Dark theme matching the original Streamlit aesthetic
+   Light violet theme. Every surface, text and border below is a
+   variable, so components re-theme without touching their own CSS.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 /* ── CSS Variables ───────────────────────────────────────────── */
 
 :root {
-  --bg-primary: #0a0a10;
-  --bg-secondary: #0d0d14;
-  --bg-tertiary: #111118;
-  --bg-card-start: #1a1a2e;
-  --bg-card-end: #16213e;
-  --bg-input: #12121c;
+  /* Surfaces, from the page ground up to raised cards. */
+  --bg-primary: #EDE9FB;
+  --bg-secondary: #F7F3FE;
+  --bg-tertiary: #FFFFFF;
+  --bg-card-start: #FFFFFF;
+  --bg-card-end: #FBF9FF;
+  --bg-input: #FFFFFF;
+  --bg-soft: #FBF9FF;
+  --bg-page-gradient: linear-gradient(135deg, #EDE9FB, #F7F3FE);
 
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-dark: #4f46e5;
-  --accent-glow: rgba(99, 102, 241, 0.15);
-  --accent-glow-strong: rgba(99, 102, 241, 0.35);
+  --accent: #6C4CF5;
+  --accent-light: #8A70F8;
+  --accent-dark: #5335D6;
+  --accent-soft: #EFE9FE;
+  --accent-glow: rgba(108, 76, 245, 0.12);
+  --accent-glow-strong: rgba(108, 76, 245, 0.28);
 
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #3b82f6;
+  --success: #16a34a;
+  --warning: #d97706;
+  --error: #dc2626;
+  --info: #2563eb;
 
-  --text-primary: #e0e0ff;
-  --text-secondary: #a0a0c0;
-  --text-muted: #6b6b8a;
-  --text-label: #6366f1;
+  /* Tag colours from the dashboard design. */
+  --tag-lilac-bg: #E7DCFB;
+  --tag-lilac-text: #7A50E0;
+  --tag-rose-bg: #FBDCE9;
+  --tag-rose-text: #C2447A;
 
-  --border: #1e1e2e;
-  --border-accent: #6366f1;
-  --border-hover: #818cf8;
+  --text-primary: #231B3B;
+  --text-secondary: #6F6789;
+  --text-muted: #A69FC0;
+  --text-label: #6C4CF5;
+  --text-on-accent: #FFFFFF;
+
+  --border: #EEE9FB;
+  --border-accent: #6C4CF5;
+  --border-hover: #8A70F8;
 
   --radius-xs: 6px;
   --radius-sm: 8px;
@@ -42,12 +54,12 @@
   --radius-xl: 20px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-card: 0 4px 12px rgba(99, 102, 241, 0.15);
-  --shadow-hover: 0 8px 24px rgba(99, 102, 241, 0.25);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+  --shadow-sm: 0 2px 8px rgba(108, 76, 245, 0.08);
+  --shadow-card: 0 8px 24px -12px rgba(108, 76, 245, 0.25);
+  --shadow-hover: 0 14px 32px -14px rgba(108, 76, 245, 0.35);
+  --shadow-glow: 0 30px 60px -20px rgba(108, 76, 245, 0.25);
 
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   --transition-fast: 150ms ease;
@@ -80,13 +92,13 @@ body {
 }
 
 a {
-  color: var(--accent-light);
+  color: var(--accent);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--accent);
+  color: var(--accent-dark);
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────── */
@@ -161,12 +173,12 @@ h4 { font-size: 1.1rem; }
 
 .btn-primary {
   background: var(--accent);
-  color: white;
+  color: var(--text-on-accent);
   box-shadow: var(--shadow-card);
 }
 
 .btn-primary:hover {
-  background: var(--accent-light);
+  background: var(--accent-dark);
   box-shadow: var(--shadow-hover);
   transform: translateY(-1px);
 }
@@ -222,8 +234,8 @@ h4 { font-size: 1.1rem; }
 
 .card {
   background: linear-gradient(135deg, var(--bg-card-start), var(--bg-card-end));
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 20px;
   transition: var(--transition);
   box-shadow: var(--shadow-card);
@@ -248,7 +260,7 @@ h4 { font-size: 1.1rem; }
 
 .card-meta {
   font-size: 12px;
-  color: var(--accent-light);
+  color: var(--accent);
   margin-top: 6px;
   opacity: 0.9;
 }
@@ -290,21 +302,21 @@ h4 { font-size: 1.1rem; }
 }
 
 .badge-pdf {
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, 0.25);
 }
 
 .badge-audio {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.25);
 }
 
 .badge-image {
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: rgba(147, 51, 234, 0.12);
+  color: #7e22ce;
+  border: 1px solid rgba(147, 51, 234, 0.25);
 }
 
 /* ── Animations ──────────────────────────────────────────────── */

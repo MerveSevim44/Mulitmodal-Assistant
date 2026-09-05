@@ -135,5 +135,6 @@ async def delete_material(
     bucket = "pdfs" if material["type"] == "pdf" else "audio" if material["type"] == "audio" else "images"
     supabase.storage.from_(bucket).remove([material["storage_path"]])
 
-    # Delete associated vector chunks
-    delete_by_file(material["file_name"], material["topic_id"])
+    # Delete associated vector chunks. Ingestion keys them on the basename of
+    # the stored object (timestamp-prefixed), not on the original file name.
+    delete_by_file(os.path.basename(material["storage_path"]), material["topic_id"])
