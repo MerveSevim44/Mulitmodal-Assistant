@@ -16,6 +16,7 @@ import {
   Target,
   Trash2,
 } from "lucide-react";
+import axios from "axios";
 import { supabase } from "@/lib/supabase";
 import { deleteCourse, getOverview, type OverviewData } from "@/lib/api";
 import styles from "./profile.module.css";
@@ -127,7 +128,11 @@ export default function ProfilePage() {
 
     getOverview()
       .then(({ data }) => setOverview(data))
-      .catch((err) => console.error("Profil özeti alınamadı:", err))
+      // A cancelled request means there is no session and the client is
+      // already redirecting to /login — not a failure worth reporting.
+      .catch((err) => {
+        if (!axios.isCancel(err)) console.error("Profil özeti alınamadı:", err);
+      })
       .finally(() => setLoading(false));
   }, []);
 

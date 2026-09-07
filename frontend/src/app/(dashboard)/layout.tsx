@@ -45,6 +45,11 @@ export default function DashboardLayout({
     null
   );
 
+  // Null until the session check has answered. The API calls below wait for
+  // it: firing them alongside the check meant a signed-out load sent a
+  // token-less /overview before the redirect landed.
+  const [authed, setAuthed] = useState(false);
+
   useEffect(() => {
     const checkAuth = async () => {
       const {
@@ -55,19 +60,24 @@ export default function DashboardLayout({
         return;
       }
       setUserEmail(session.user.email || "");
+      setAuthed(true);
     };
     checkAuth();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) router.replace("/login");
+      if (!session) {
+        setAuthed(false);
+        router.replace("/login");
+      }
     });
 
     return () => subscription.unsubscribe();
   }, [router]);
 
   useEffect(() => {
+    if (!authed) return;
     getOverview()
       .then(({ data }) =>
         setCounts({
@@ -76,7 +86,7 @@ export default function DashboardLayout({
         })
       )
       .catch(() => setCounts(null));
-  }, []);
+  }, [authed]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

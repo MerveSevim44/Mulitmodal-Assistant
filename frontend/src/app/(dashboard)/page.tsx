@@ -12,6 +12,7 @@ import {
   Info,
   BookOpen,
 } from "lucide-react";
+import axios from "axios";
 import { getOverview, type OverviewData, type TopicOverview } from "@/lib/api";
 import styles from "./home.module.css";
 
@@ -125,7 +126,11 @@ export default function HomeDashboard() {
   useEffect(() => {
     getOverview()
       .then(({ data }) => setData(data))
-      .catch((err) => console.error("Failed to load overview:", err))
+      // A cancelled request means there is no session and the client is
+      // already redirecting to /login — not a failure worth reporting.
+      .catch((err) => {
+        if (!axios.isCancel(err)) console.error("Failed to load overview:", err);
+      })
       .finally(() => setLoading(false));
   }, []);
 

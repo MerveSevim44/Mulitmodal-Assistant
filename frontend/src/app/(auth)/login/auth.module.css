@@ -1,19 +1,97 @@
+/* ============================================================
+   AUTH — split screen. Left: fotoğraf + "stay focused."
+   Right: lavanta zeminde beyaz form kartı.
+   ============================================================ */
+
 .container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* ── Sol görsel panel ────────────────────────────────────────── */
+
+.visual {
+  position: relative;
+  flex: 1 1 57%;
+  min-height: 100vh;
+  overflow: hidden;
+  /* Fotoğraf yoksa altındaki degrade görünür. */
+  background-color: #C9C2D6;
+  background-image: url("/auth-visual.jpg"),
+    linear-gradient(150deg, #8f86a3, #d8d2e4 55%, #b7aec8);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Metnin okunabilirliği için hafif karartma. */
+.visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(35, 27, 59, 0.18) 0%,
+    rgba(35, 27, 59, 0.28) 55%,
+    rgba(35, 27, 59, 0.32) 100%
+  );
+}
+
+.visualInner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+}
+
+.visualText {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3.5rem, 7vw, 7rem);
+  line-height: 0.95;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  animation: fadeIn 0.8s ease-out;
+}
+
+.visualText span {
+  display: block;
+}
+
+.visualTagline {
+  margin-top: 28px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ── Sağ form paneli ─────────────────────────────────────────── */
+
+.formPane {
+  flex: 1 1 43%;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: var(--bg-primary);
-  padding: 20px;
+  padding: 40px 32px;
 }
 
 .card {
-  background: linear-gradient(135deg, var(--bg-card-start), var(--bg-card-end));
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-lg);
-  padding: 40px;
+  background: var(--bg-card-start);
+  border: 1px solid #DCD2FA;
+  border-radius: var(--radius-xl);
+  padding: 44px 40px;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   box-shadow: var(--shadow-glow);
   animation: fadeIn 0.5s ease-out;
 }
@@ -21,15 +99,17 @@
 .logo {
   font-size: 48px;
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  line-height: 1;
 }
 
 .title {
   text-align: center;
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
 }
 
 .subtitle {
@@ -37,9 +117,9 @@
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--text-label);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-bottom: 32px;
+  margin-bottom: 34px;
 }
 
 .form {
@@ -51,11 +131,10 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
 }
 
 .error {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(220, 38, 38, 0.08);
   border: 1px solid var(--error);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
@@ -65,17 +144,39 @@
 
 .footer {
   text-align: center;
-  margin-top: 24px;
+  margin-top: 26px;
   font-size: 14px;
   color: var(--text-secondary);
 }
 
 .link {
-  color: var(--accent-light);
-  font-weight: 600;
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .link:hover {
-  color: var(--accent);
+  color: var(--accent-dark);
   text-decoration: underline;
+}
+
+/* ── Duyarlı: dar ekranda görsel panel gizlenir ──────────────── */
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .visual {
+    display: none;
+  }
+
+  .formPane {
+    flex: 1 1 auto;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .card {
+    padding: 36px 26px;
+  }
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import AuthVisual from "@/components/auth/AuthVisual";
 import styles from "../login/auth.module.css";
 
 export default function RegisterPage() {
@@ -46,66 +47,70 @@ export default function RegisterPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.card}>
-        <div className={styles.logo}>🎓</div>
-        <h1 className={styles.title}>Hesap Oluştur</h1>
-        <p className={styles.subtitle}>Akademik belleğini kur</p>
+      <AuthVisual />
 
-        <form onSubmit={handleRegister} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+      <div className={styles.formPane}>
+        <div className={styles.card}>
+          <div className={styles.logo}>🎓</div>
+          <h1 className={styles.title}>Hesap Oluştur</h1>
+          <p className={styles.subtitle}>Akademik belleğini kur</p>
 
-          <div className={styles.field}>
-            <label className="label">E-posta</label>
-            <input
-              type="email"
-              className="input"
-              placeholder="ornek@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          <form onSubmit={handleRegister} className={styles.form}>
+            {error && <div className={styles.error}>{error}</div>}
 
-          <div className={styles.field}>
-            <label className="label">Şifre</label>
-            <input
-              type="password"
-              className="input"
-              placeholder="En az 6 karakter"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
+            <div className={styles.field}>
+              <label className="label">E-posta</label>
+              <input
+                type="email"
+                className="input"
+                placeholder="ornek@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className={styles.field}>
-            <label className="label">Şifre Tekrar</label>
-            <input
-              type="password"
-              className="input"
-              placeholder="Şifreyi tekrar gir"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
+            <div className={styles.field}>
+              <label className="label">Şifre</label>
+              <input
+                type="password"
+                className="input"
+                placeholder="En az 6 karakter"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary btn-full"
-            disabled={loading}
-          >
-            {loading ? <span className="spinner" /> : "Kayıt Ol"}
-          </button>
-        </form>
+            <div className={styles.field}>
+              <label className="label">Şifre Tekrar</label>
+              <input
+                type="password"
+                className="input"
+                placeholder="Şifreyi tekrar gir"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
 
-        <p className={styles.footer}>
-          Zaten hesabın var mı?{" "}
-          <a href="/login" className={styles.link}>
-            Giriş yap
-          </a>
-        </p>
+            <button
+              type="submit"
+              className="btn btn-primary btn-full"
+              disabled={loading}
+            >
+              {loading ? <span className="spinner" /> : "Kayıt Ol"}
+            </button>
+          </form>
+
+          <p className={styles.footer}>
+            Zaten hesabın var mı?{" "}
+            <a href="/login" className={styles.link}>
+              Giriş yap
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

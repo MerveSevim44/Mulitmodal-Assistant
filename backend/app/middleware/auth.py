@@ -9,7 +9,12 @@ from fastapi import Request, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.config import get_settings
 
-security = HTTPBearer()
+# `auto_error=False` so a missing/!bearer header lands in verify_jwt instead of
+# FastAPI's built-in rejection: on FastAPI < 0.116 that built-in is a 403, which
+# reads as "logged in but not allowed" and slips past the frontend's 401 handler
+# (refresh the token, else bounce to /login). Raising 401 here keeps the status
+# honest and identical across FastAPI versions.
+security = HTTPBearer(auto_error=False)
 
 jwks_client_instance = None
 
@@ -22,7 +27,7 @@ def get_jwks_client(supabase_url: str) -> PyJWKClient:
 
 
 async def verify_jwt(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
 ) -> dict:
     """
     Verify the JWT token from the Authorization header.
@@ -31,6 +36,13 @@ async def verify_jwt(
     Raises:
         HTTPException 401: If token is missing, expired, or invalid.
     """
+    if credentials is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     settings = get_settings()
     token = credentials.credentials
 
