@@ -11,7 +11,7 @@ router = APIRouter(prefix="/overview", tags=["overview"])
 
 
 @router.get("", response_model=OverviewResponse)
-async def get_overview(
+def get_overview(
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),
 ):

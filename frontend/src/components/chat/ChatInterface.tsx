@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getChatHistory, clearChatHistory } from "@/lib/api";
+import { getChatHistory, clearChatHistory, uploadMaterial, detectMaterialType } from "@/lib/api";
 import { streamChat } from "@/lib/stream";
 import styles from "./chat.module.css";
 import MarkdownMessage from "./MarkdownMessage";
@@ -11,16 +11,74 @@ import type { Message } from "./types";
 /** How close to the bottom still counts as "following along", in px. */
 const STICK_THRESHOLD = 80;
 
+/** Boş sohbette gösterilen hazır başlangıç soruları. */
+const SUGGESTIONS = [
+  { icon: "summary", text: "Bu konunun kısa bir özetini çıkar" },
+  { icon: "exam", text: "Beni bu konudan sınava hazırla" },
+  { icon: "help", text: "Anlamadığım kısımları basitçe anlat" },
+] as const;
+
+function SuggestionIcon({ name }: { name: (typeof SUGGESTIONS)[number]["icon"] }) {
+  if (name === "summary") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M4 6h16M4 12h16M4 18h10" />
+      </svg>
+    );
+  }
+  if (name === "exam") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-4M17 3l4 4-11 11H6v-4z" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 9a2.5 2.5 0 015 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01" />
+    </svg>
+  );
+}
+
+/** Asistan işareti — emoji yerine arayüzün geri kalanıyla aynı vektör dilinde. */
+function AssistantMark() {
+  return (
+    <div className={styles.assistantMark} aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+        <path
+          d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"
+          fill="currentColor"
+          fillOpacity="0.16"
+        />
+        <path
+          d="M18.4 15.2l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"
+          fill="currentColor"
+          fillOpacity="0.16"
+        />
+      </svg>
+    </div>
+  );
+}
+
 export default function ChatInterface({ topicId }: { topicId: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [input, setInput] = useState("");
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadNote, setUploadNote] = useState("Yükleniyor…");
+  // Set on success and cleared on a timer, so the icons visibly do something
+  // — the chat has no material list to reflect a finished upload.
+  const [uploadDone, setUploadDone] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messageAreaRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const imagePickerRef = useRef<HTMLInputElement>(null);
+  const filePickerRef = useRef<HTMLInputElement>(null);
+  const audioPickerRef = useRef<HTMLInputElement>(null);
 
   // Whether the reader is pinned to the bottom. A ref, not state: it changes on
   // every scroll and must never itself cause a render.
@@ -93,11 +151,9 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
     setStreamingText((prev) => prev + pending);
   }, []);
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isStreaming) return;
-
-    const userMessage = input.trim();
+  const send = (text: string) => {
+    const userMessage = text.trim();
+    if (!userMessage || isStreaming) return;
     setInput("");
 
     // Optimistically add user message
@@ -141,6 +197,11 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
     });
   };
 
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    send(input);
+  };
+
   const handleClear = async () => {
     if (!confirm("Tüm sohbet geçmişi silinecek. Emin misiniz?")) return;
     try {
@@ -150,6 +211,145 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
       console.error("Failed to clear history:", err);
     }
   };
+
+  // Yazma çubuğundaki ekleme düğmeleri materyal yükler: dosya konunun
+  // materyalleri arasına girer ve sonraki sorularda kaynak olarak kullanılır.
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    // Classified by extension, not by `file.type` — the browser leaves the
+    // type empty for .m4a/.wav often enough, and calls .mp4 a video, either of
+    // which used to send an audio recording to the PDF bucket.
+    const type = detectMaterialType(file);
+    if (!type) {
+      alert("Desteklenmeyen dosya formatı. PDF, ses (mp3/wav/m4a/mp4) veya görsel (png/jpg) yükleyin.");
+      return;
+    }
+
+    setUploading(true);
+    setUploadDone(null);
+    setUploadNote("Yükleniyor…");
+    try {
+      await uploadMaterial(topicId, file, type, (phase) => {
+        setUploadNote(
+          phase === "uploading"
+            ? "Yükleniyor…"
+            : type === "audio"
+              ? "Ses çözümleniyor, birkaç dakika sürebilir…"
+              : "İşleniyor…"
+        );
+      });
+      setUploadDone(`${file.name} eklendi — artık bu materyale soru sorabilirsin.`);
+      setTimeout(() => setUploadDone(null), 6000);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      const detail =
+        (err as { response?: { data?: { detail?: string } }; message?: string })?.response?.data
+          ?.detail ?? (err as Error)?.message;
+      alert(`Dosya yüklenemedi: ${detail ?? "Lütfen tekrar deneyin."}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const isEmpty = messages.length === 0 && !isStreaming;
+
+  const composer = (
+    <div className={styles.composerWrap}>
+      <div className={styles.composerGlow} aria-hidden="true" />
+      <form className={styles.composer} onSubmit={handleSend}>
+        <input
+          type="text"
+          className={styles.composerInput}
+          placeholder="Bir şey sor..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={isStreaming}
+          autoFocus
+        />
+        <div className={styles.composerControls}>
+          <div className={styles.composerIcons}>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              title="Görsel yükle (PNG/JPG)"
+              onClick={() => imagePickerRef.current?.click()}
+              disabled={uploading}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="3" y="4" width="18" height="16" rx="2.5" />
+                <circle cx="9" cy="10" r="1.5" />
+                <path d="M21 16l-5.5-5-4 4L9 13l-6 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              title="PDF yükle"
+              onClick={() => filePickerRef.current?.click()}
+              disabled={uploading}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M21 12.5V7a2 2 0 00-2-2H8L4 9v8a2 2 0 002 2h6M17 15v6M14 18h6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              title="Ses dosyası yükle (MP3/WAV/M4A)"
+              onClick={() => audioPickerRef.current?.click()}
+              disabled={uploading}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="9" y="3" width="6" height="11" rx="3" />
+                <path d="M5 11a7 7 0 0014 0M12 18v3" />
+              </svg>
+            </button>
+            {uploading && <span className={styles.uploadNote}>{uploadNote}</span>}
+            {!uploading && uploadDone && (
+              <span className={styles.uploadNote}>{uploadDone}</span>
+            )}
+          </div>
+          <button
+            type="submit"
+            className={styles.sendBtn}
+            disabled={!input.trim() || isStreaming}
+            title="Gönder"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      {/* One picker per type, each restricted to what its bucket accepts, so
+          the file dialog cannot offer a format the upload would reject. */}
+      <input
+        ref={imagePickerRef}
+        type="file"
+        accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+        hidden
+        onChange={handleUpload}
+      />
+      <input
+        ref={audioPickerRef}
+        type="file"
+        accept=".mp3,.wav,.m4a,.mp4,audio/*"
+        hidden
+        onChange={handleUpload}
+      />
+      <input
+        ref={filePickerRef}
+        type="file"
+        accept=".pdf,application/pdf"
+        hidden
+        onChange={handleUpload}
+      />
+    </div>
+  );
 
   return (
     <div className={styles.container}>
@@ -171,13 +371,24 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
           <div className="flex items-center justify-center h-full">
             <div className="spinner" />
           </div>
-        ) : messages.length === 0 && !isStreaming ? (
+        ) : isEmpty ? (
           <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>🤖</div>
-            <p>Merhaba! Konuyla ilgili sormak istediğin bir şey var mı?</p>
-            <p className={styles.emptyHint}>
-              Sağ taraftan PDF veya ses yükledikten sonra sorularını sorabilirsin.
+            <AssistantMark />
+            <h1 className={styles.emptyTitle}>Bu konu hakkında ne öğrenmek istersin?</h1>
+            <p className={styles.emptySub}>
+              Detaylı sorular sor, asistan konunun içeriğine göre cevap versin
             </p>
+
+            {composer}
+
+            <div className={styles.suggestions}>
+              {SUGGESTIONS.map((s) => (
+                <button key={s.text} type="button" className={styles.chip} onClick={() => send(s.text)}>
+                  <SuggestionIcon name={s.icon} />
+                  {s.text}
+                </button>
+              ))}
+            </div>
           </div>
         ) : (
           <div className={styles.messageList}>
@@ -198,24 +409,7 @@ export default function ChatInterface({ topicId }: { topicId: string }) {
         )}
       </div>
 
-      <form className={styles.inputArea} onSubmit={handleSend}>
-        <input
-          type="text"
-          className="input"
-          placeholder="Soru sor (Örn: Bu konunun özeti nedir?)"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={isStreaming}
-          autoFocus
-        />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={!input.trim() || isStreaming}
-        >
-          {isStreaming ? "⏳" : "Gönder"}
-        </button>
-      </form>
+      {!isEmpty && !loading && <div className={styles.inputArea}>{composer}</div>}
     </div>
   );
 }

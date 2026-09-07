@@ -8,7 +8,7 @@ import {
   CalendarDays,
   FolderOpen,
   MessageCircle,
-  Settings,
+  User,
   Brain,
   LogOut,
 } from "lucide-react";
@@ -17,17 +17,18 @@ import { getOverview } from "@/lib/api";
 import styles from "./dashboard.module.css";
 
 /**
- * Sidebar navigation. Materials and chat live inside a topic rather than as
- * standalone pages, and there is no settings screen yet, so those entries are
- * rendered disabled instead of as links that would 404.
+ * Sidebar navigation. Chat lives inside a topic rather than as a standalone
+ * page, so that entry is rendered disabled instead of as a link that would
+ * 404. Materials do have a standalone page: a flat library of everything
+ * uploaded, across all courses.
  */
 const NAV_ITEMS = [
   { icon: Home, label: "Ana Sayfa", href: "/" },
   { icon: BookOpen, label: "Derslerim", href: "/courses" },
   { icon: CalendarDays, label: "Ders Planı", href: "/plan" },
-  { icon: FolderOpen, label: "Materyaller", href: null },
+  { icon: FolderOpen, label: "Materyaller", href: "/materials" },
   { icon: MessageCircle, label: "Sohbet", href: null },
-  { icon: Settings, label: "Ayarlar", href: null },
+  { icon: User, label: "Profilim", href: "/profile" },
 ];
 
 export default function DashboardLayout({
@@ -38,7 +39,11 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [userEmail, setUserEmail] = useState("");
-  const [topicCount, setTopicCount] = useState<number | null>(null);
+  // Topics that actually have material behind them, plus the ones still empty
+  // — the card promises a review, so it should not count empty topics.
+  const [counts, setCounts] = useState<{ ready: number; empty: number } | null>(
+    null
+  );
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -64,8 +69,13 @@ export default function DashboardLayout({
 
   useEffect(() => {
     getOverview()
-      .then(({ data }) => setTopicCount(data.total_topics))
-      .catch(() => setTopicCount(null));
+      .then(({ data }) =>
+        setCounts({
+          ready: data.total_topics - data.empty_topics,
+          empty: data.empty_topics,
+        })
+      )
+      .catch(() => setCounts(null));
   }, []);
 
   const handleLogout = async () => {
@@ -109,31 +119,41 @@ export default function DashboardLayout({
               <Brain size={22} strokeWidth={2} />
             </div>
             <p className={styles.promptTitle}>
-              {topicCount === null
+              {counts === null
                 ? "Konuların yükleniyor"
-                : topicCount === 0
-                ? "Henüz konu yok"
-                : `${topicCount} konu tekrar bekliyor`}
+                : counts.ready === 0
+                ? "Tekrar edilecek konu yok"
+                : `${counts.ready} konu tekrar bekliyor`}
             </p>
             <p className={styles.promptHint}>
-              {topicCount ? "Unutmadan bugün tekrar et" : "Başlamak için bir ders ekle"}
+              {counts === null
+                ? "Bir saniye"
+                : counts.ready > 0
+                ? "Unutmadan bugün tekrar et"
+                : counts.empty > 0
+                ? `${counts.empty} konuda henüz materyal yok`
+                : "Başlamak için bir ders ekle"}
             </p>
             <button
               className={styles.promptButton}
-              onClick={() => router.push(topicCount ? "/" : "/courses")}
-              disabled={topicCount === null}
+              onClick={() => router.push(counts?.ready ? "/" : "/courses")}
+              disabled={counts === null}
             >
-              {topicCount ? "Tekrara Başla" : "Ders Oluştur"}
+              {counts?.ready ? "Tekrara Başla" : "Ders Oluştur"}
             </button>
           </div>
 
           <div className={styles.sidebarFooter}>
-            <div className={styles.userInfo}>
+            <button
+              className={styles.userInfo}
+              onClick={() => router.push("/profile")}
+              title="Profilim"
+            >
               <div className={styles.avatar}>
                 {userEmail.charAt(0).toUpperCase()}
               </div>
               <span className={styles.email}>{userEmail}</span>
-            </div>
+            </button>
             <button className={styles.navItem} onClick={handleLogout}>
               <LogOut size={17} strokeWidth={2} />
               Çıkış Yap

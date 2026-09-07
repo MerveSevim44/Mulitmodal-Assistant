@@ -11,7 +11,7 @@ router = APIRouter(prefix="/topics", tags=["topics"])
 
 
 @router.get("/courses/{course_id}/topics", response_model=TopicListResponse)
-async def list_topics(
+def list_topics(
     course_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),
@@ -42,7 +42,7 @@ async def list_topics(
 
 
 @router.post("/courses/{course_id}/topics", response_model=TopicResponse, status_code=201)
-async def create_topic(
+def create_topic(
     course_id: str,
     body: TopicCreate,
     user_id: str = Depends(get_current_user_id),
@@ -66,7 +66,7 @@ async def create_topic(
 
 
 @router.patch("/{topic_id}", response_model=TopicResponse)
-async def update_topic(
+def update_topic(
     topic_id: str,
     body: TopicUpdate,
     user_id: str = Depends(get_current_user_id),
@@ -94,7 +94,7 @@ async def update_topic(
 
 
 @router.delete("/{topic_id}", status_code=204)
-async def delete_topic(
+def delete_topic(
     topic_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),

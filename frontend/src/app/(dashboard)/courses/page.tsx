@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Folder } from "lucide-react";
 import { getCourses, createCourse, deleteCourse } from "@/lib/api";
 import styles from "./courses.module.css";
 
@@ -14,19 +14,17 @@ interface Course {
 }
 
 /**
- * Her ders bir kağıt sayfası gibi görünüyor; renk ve eğim sıradan türetiliyor,
- * böylece aynı ders her yüklemede aynı yerde aynı renkte duruyor.
+ * Her ders bir dosya klasörü; renk sıradan türetiliyor, böylece aynı ders
+ * her yüklemede aynı yerde aynı renkte duruyor.
  */
-const PAPERS = [
-  { bg: "#EDEAFB", fold: "#D5CDF5", title: "#4B3FAE", meta: "#8A7FD6" },
-  { bg: "#E3F0FC", fold: "#C4DFF5", title: "#2A6FA8", meta: "#5C97C4" },
-  { bg: "#FCEAE3", fold: "#F5CFBC", title: "#B14E31", meta: "#D68868" },
-  { bg: "#E7F4EA", fold: "#C6E5CF", title: "#2F7D4F", meta: "#6BA783" },
-  { bg: "#FBDCE9", fold: "#F3C2D8", title: "#C2447A", meta: "#D782A6" },
-  { bg: "#FCF3DD", fold: "#F0DFAF", title: "#96702A", meta: "#C0A05C" },
+const FOLDERS = [
+  { c1: "#E7E1FC", c2: "#B7A6F0", ink: "#6C4CF5" },
+  { c1: "#DCEBFB", c2: "#8FBEEB", ink: "#2A6FA8" },
+  { c1: "#FBEBDF", c2: "#F0B283", ink: "#B14E31" },
+  { c1: "#E1F2E7", c2: "#95CDAB", ink: "#2F7D4F" },
+  { c1: "#FBE0EC", c2: "#EFA2C4", ink: "#C2447A" },
+  { c1: "#FCF3DD", c2: "#EBCD8A", ink: "#96702A" },
 ];
-
-const ROTATIONS = ["-2.2deg", "1.6deg", "-1deg", "2deg"];
 
 export default function CoursesPage() {
   const router = useRouter();
@@ -130,31 +128,46 @@ export default function CoursesPage() {
 
       <div className={styles.grid}>
         {courses.map((course, i) => {
-          const paper = PAPERS[i % PAPERS.length];
+          const folder = FOLDERS[i % FOLDERS.length];
           return (
             <div
               key={course.id}
-              className={styles.paper}
-              role="button"
-              tabIndex={0}
+              className={styles.folder}
               style={
                 {
-                  "--paper-bg": paper.bg,
-                  "--paper-fold": paper.fold,
-                  "--paper-title": paper.title,
-                  "--paper-meta": paper.meta,
-                  "--rot": ROTATIONS[i % ROTATIONS.length],
+                  "--folder-c1": folder.c1,
+                  "--folder-c2": folder.c2,
+                  "--folder-ink": folder.ink,
                   animationDelay: `${i * 50}ms`,
                 } as React.CSSProperties
               }
-              onClick={() => router.push(`/courses/${course.id}`)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  router.push(`/courses/${course.id}`);
-                }
-              }}
             >
+              <div className={styles.folderTab} />
+              <div
+                className={styles.folderBody}
+                role="button"
+                tabIndex={0}
+                onClick={() => router.push(`/courses/${course.id}`)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    router.push(`/courses/${course.id}`);
+                  }
+                }}
+              >
+                <div className={styles.folderTitle}>{course.name}</div>
+                <div>
+                  <div className={styles.folderDivider} />
+                  <div className={styles.folderFooter}>
+                    <span className={styles.miniIcon}>
+                      <Folder size={14} strokeWidth={2} />
+                    </span>
+                    <span className={styles.topicCount}>
+                      {course.topic_count || 0} konu
+                    </span>
+                  </div>
+                </div>
+              </div>
               <button
                 className={styles.delBtn}
                 aria-label={`${course.name} dersini sil`}
@@ -164,10 +177,8 @@ export default function CoursesPage() {
                   handleDelete(course.id, course.name);
                 }}
               >
-                <Trash2 size={12} />
+                <Trash2 size={13} />
               </button>
-              <div className={styles.paperTitle}>{course.name}</div>
-              <div className={styles.paperMeta}>{course.topic_count || 0} konu</div>
             </div>
           );
         })}
@@ -177,10 +188,12 @@ export default function CoursesPage() {
           className={styles.newCard}
           onClick={() => setShowCreate(true)}
         >
-          <span className={styles.newPlus}>
-            <Plus size={15} strokeWidth={2.2} />
+          <span className={styles.newCardBody}>
+            <span className={styles.newPlus}>
+              <Plus size={15} strokeWidth={2.2} />
+            </span>
+            <span className={styles.newLabel}>Yeni Ders</span>
           </span>
-          <span className={styles.newLabel}>yeni ders</span>
         </button>
       </div>
     </div>

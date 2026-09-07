@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getMaterials, deleteMaterial, uploadMaterial } from "@/lib/api";
+import { getMaterials, deleteMaterial, uploadMaterial, detectMaterialType } from "@/lib/api";
 import styles from "./materials.module.css";
 
 interface Material {
@@ -40,21 +40,12 @@ export default function MaterialsSidebar({ topicId }: { topicId: string }) {
     // Reset input
     e.target.value = "";
 
-    // File validation
-    const ext = file.name.split(".").pop()?.toLowerCase() || "";
-    let type: "pdf" | "audio" | "image" | null = null;
-
-    if (ext === "pdf") type = "pdf";
-    else if (["mp3", "mp4", "wav", "m4a"].includes(ext)) type = "audio";
-    else if (["png", "jpg", "jpeg"].includes(ext)) type = "image";
-
+    // File validation. Size is checked inside uploadMaterial, against the
+    // per-bucket limit rather than one blanket number — the old 60MB gate let
+    // through files the buckets themselves reject.
+    const type = detectMaterialType(file);
     if (!type) {
       alert("Desteklenmeyen dosya formatı.");
-      return;
-    }
-
-    if (file.size > 60 * 1024 * 1024) {
-      alert("Dosya boyutu 60MB'dan küçük olmalıdır.");
       return;
     }
 
@@ -62,11 +53,25 @@ export default function MaterialsSidebar({ topicId }: { topicId: string }) {
     setUploadProgress(`Yükleniyor: ${file.name}...`);
 
     try {
-      await uploadMaterial(topicId, file, type);
-      setUploadProgress("İşleniyor...");
+      // The progress line used to flip to "İşleniyor" only after the whole
+      // call returned — so the slowest stage by far, transcription, ran
+      // under a label that said "Yükleniyor" and looked frozen.
+      await uploadMaterial(topicId, file, type, (phase) => {
+        setUploadProgress(
+          phase === "uploading"
+            ? `Yükleniyor: ${file.name}...`
+            : type === "audio"
+              ? "Ses çözümleniyor (uzun kayıtlarda birkaç dakika sürebilir)..."
+              : "İşleniyor..."
+        );
+      });
+      setUploadProgress("Tamamlanıyor...");
       await loadMaterials();
     } catch (err: any) {
-      alert(`Yükleme hatası: ${err.message}`);
+      // The backend reports processing failures (transcription, ingest) in
+      // `detail`; without it the alert only ever said "Request failed with
+      // status code 500".
+      alert(`Yükleme hatası: ${err?.response?.data?.detail ?? err.message}`);
     } finally {
       setUploading(false);
       setUploadProgress("");
@@ -118,7 +123,7 @@ export default function MaterialsSidebar({ topicId }: { topicId: string }) {
             )}
           </div>
           <div className={styles.uploadSubtext}>
-            PDF, Ses (MP3/WAV), Görsel (PNG/JPG) - Max 60MB
+            PDF (50MB), Ses MP3/WAV/M4A (50MB), Görsel PNG/JPG (10MB)
           </div>
         </label>
       </div>

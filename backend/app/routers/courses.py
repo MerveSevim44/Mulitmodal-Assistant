@@ -11,7 +11,7 @@ router = APIRouter(prefix="/courses", tags=["courses"])
 
 
 @router.get("", response_model=CourseListResponse)
-async def list_courses(
+def list_courses(
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),
 ):
@@ -40,7 +40,7 @@ async def list_courses(
    
 
 @router.post("", response_model=CourseResponse, status_code=201)
-async def create_course(
+def create_course(
     body: CourseCreate,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),
@@ -70,7 +70,7 @@ async def create_course(
 
 
 @router.patch("/{course_id}", response_model=CourseResponse)
-async def update_course(
+def update_course(
     course_id: str,
     body: CourseUpdate,
     user_id: str = Depends(get_current_user_id),
@@ -90,7 +90,7 @@ async def update_course(
 
 
 @router.delete("/{course_id}", status_code=204)
-async def delete_course(
+def delete_course(
     course_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),

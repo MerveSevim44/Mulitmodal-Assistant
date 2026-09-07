@@ -16,19 +16,39 @@ import { getOverview, type OverviewData, type TopicOverview } from "@/lib/api";
 import styles from "./home.module.css";
 
 /**
- * Placeholder review times. There is no reviews/schedules table yet, so the
- * slots on the timeline are decorative — everything else on this page (courses,
- * topics, material types and counts) comes from /api/v1/overview.
+ * The home dashboard is built entirely from /api/v1/overview — courses,
+ * topics, material type counts and the topics' created_at timestamps. There is
+ * no reviews/schedules table yet, so nothing here invents a review time: the
+ * timeline labels are the times the topics were actually added.
  */
-const MOCK_SLOTS = ["09:00", "11:30", "13:00", "15:30", "18:00", "20:00"];
 
-const WEEKDAYS = ["P", "S", "Ç", "P", "C", "C", "P"];
+// Monday-first, matching Date#getDay() shifted by one.
+const WEEKDAYS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
 
-function formatDate(date: Date): string {
+/** Local YYYY-MM-DD key — used to group topics by the day they were added. */
+function dayKey(date: Date): string {
+  const m = `${date.getMonth() + 1}`.padStart(2, "0");
+  const d = `${date.getDate()}`.padStart(2, "0");
+  return `${date.getFullYear()}-${m}-${d}`;
+}
+
+/** 0 = Monday … 6 = Sunday. */
+function mondayIndex(date: Date): number {
+  return (date.getDay() + 6) % 7;
+}
+
+function formatLongDate(date: Date): string {
   return date.toLocaleDateString("tr-TR", {
     day: "numeric",
     month: "long",
     weekday: "long",
+  });
+}
+
+function formatTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString("tr-TR", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -40,16 +60,19 @@ function Tag({ children, index }: { children: React.ReactNode; index: number }) 
 
 /**
  * Ring showing how many of the three source types a topic has (PDF, audio,
- * image). This is derived from real material counts rather than an invented
- * "memory strength" score, which the backend has no data for.
+ * image). Labelled as a fraction rather than a percentage so it does not read
+ * as a "memory strength" score, which the backend has no data for.
  */
-function CoverageRing({ value }: { value: number }) {
+function CoverageRing({ present, total }: { present: number; total: number }) {
   const r = 15;
   const circumference = 2 * Math.PI * r;
-  const offset = circumference - (value / 100) * circumference;
+  const offset = circumference - (present / total) * circumference;
 
   return (
-    <div className={styles.ring}>
+    <div
+      className={styles.ring}
+      title={`${total} kaynak türünden ${present} tanesi eklendi`}
+    >
       <svg width="36" height="36" viewBox="0 0 36 36">
         <circle cx="18" cy="18" r={r} fill="none" stroke="var(--border)" strokeWidth="4" />
         <circle
@@ -65,7 +88,9 @@ function CoverageRing({ value }: { value: number }) {
           transform="rotate(-90 18 18)"
         />
       </svg>
-      <span className={styles.ringValue}>{value}</span>
+      <span className={styles.ringValue}>
+        {present}/{total}
+      </span>
     </div>
   );
 }
@@ -79,11 +104,9 @@ function sourceIcons(topic: TopicOverview) {
 }
 
 function describeTopic(topic: TopicOverview): string {
-  const parts: string[] = [];
-  if (topic.pdf_count) parts.push(`${topic.pdf_count} PDF`);
-  if (topic.audio_count) parts.push(`${topic.audio_count} ses kaydı`);
-  if (topic.image_count) parts.push(`${topic.image_count} görsel`);
-  return parts.join(" · ");
+  return sourceIcons(topic)
+    .map((icon) => icon.label)
+    .join(" · ");
 }
 
 export default function HomeDashboard() {
@@ -92,7 +115,12 @@ export default function HomeDashboard() {
   const [loading, setLoading] = useState(true);
 
   const today = useMemo(() => new Date(), []);
-  const [selectedDay, setSelectedDay] = useState(today.getDate());
+  // Month the calendar is showing, and the day the user picked (null = the
+  // default "most recent topics" view).
+  const [viewMonth, setViewMonth] = useState(
+    () => new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
   useEffect(() => {
     getOverview()
@@ -101,22 +129,40 @@ export default function HomeDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  const daysInMonth = useMemo(
-    () => new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate(),
-    [today]
-  );
+  const topics = useMemo(() => data?.topics ?? [], [data]);
 
-  const monthLabel = useMemo(
-    () => today.toLocaleDateString("tr-TR", { month: "long", year: "numeric" }),
-    [today]
-  );
+  // Day key -> topics added that day, for the calendar dots and the day filter.
+  const topicsByDay = useMemo(() => {
+    const map = new Map<string, TopicOverview[]>();
+    topics.forEach((topic) => {
+      const key = dayKey(new Date(topic.created_at));
+      const bucket = map.get(key);
+      if (bucket) bucket.push(topic);
+      else map.set(key, [topic]);
+    });
+    return map;
+  }, [topics]);
 
-  // Course name -> stable index, so a course keeps the same tag colour.
+  // Course id -> stable index, so a course keeps the same tag colour.
   const courseIndex = useMemo(() => {
     const map = new Map<string, number>();
-    data?.courses.forEach((c, i) => map.set(c.id, i));
+    data?.courses.forEach((course, i) => map.set(course.id, i));
     return map;
   }, [data]);
+
+  const daysInMonth = new Date(
+    viewMonth.getFullYear(),
+    viewMonth.getMonth() + 1,
+    0
+  ).getDate();
+  const leadingBlanks = mondayIndex(viewMonth);
+  const monthLabel = viewMonth.toLocaleDateString("tr-TR", {
+    month: "long",
+    year: "numeric",
+  });
+
+  const shiftMonth = (delta: number) =>
+    setViewMonth((m) => new Date(m.getFullYear(), m.getMonth() + delta, 1));
 
   const openTopic = (topic: TopicOverview) =>
     router.push(`/courses/${topic.course_id}/topics/${topic.id}`);
@@ -129,28 +175,58 @@ export default function HomeDashboard() {
     );
   }
 
-  const topics = data?.topics ?? [];
-  const queue = topics.slice(0, 6);
-  const upcoming = topics.slice(0, 3);
+  // Default view: the six most recent topics. Pick a day on the calendar and
+  // the list narrows to what was actually added that day.
+  const selectedDate = selectedKey ? new Date(`${selectedKey}T00:00:00`) : null;
+  const queue = selectedKey ? topicsByDay.get(selectedKey) ?? [] : topics.slice(0, 6);
+  const recent = topics.slice(0, 3);
 
   return (
     <div className={styles.board}>
       {/* ── Main: topic queue ─────────────────────────────────── */}
       <section className={styles.panel}>
         <header className={styles.panelHeader}>
-          <h1 className={styles.panelTitle}>Bugünkü Tekrar Programı</h1>
-          <p className={styles.panelSubtitle}>{formatDate(today)}</p>
+          <h1 className={styles.panelTitle}>
+            {selectedDate ? formatLongDate(selectedDate) : "Tekrar Listesi"}
+          </h1>
+          <p className={styles.panelSubtitle}>
+            {selectedDate
+              ? "Bu gün eklenen konular"
+              : `${formatLongDate(today)} · en son eklenen konular`}
+          </p>
+
+          {data && (
+            <p className={styles.stats}>
+              {data.total_courses} ders · {data.total_topics} konu ·{" "}
+              {data.total_materials} materyal
+              {data.empty_topics > 0 && ` · ${data.empty_topics} konu boş`}
+            </p>
+          )}
+
           <p className={styles.mockNote}>
             <Info size={12} />
-            Saatler örnek verilerdir — halka, konudaki kaynak çeşitliliğini gösterir.
+            Saatler konunun eklendiği zamanı, halka ise konudaki kaynak
+            çeşitliliğini gösterir.
           </p>
+
+          {selectedKey && (
+            <button className={styles.linkButton} onClick={() => setSelectedKey(null)}>
+              Tüm konulara dön
+            </button>
+          )}
         </header>
 
         {queue.length === 0 ? (
           <div className={styles.emptyState}>
             <BookOpen size={32} className={styles.emptyIcon} />
-            <p className={styles.emptyTitle}>Henüz konu yok</p>
-            <p>Başlamak için bir ders açıp içine konu ekle.</p>
+            <p className={styles.emptyTitle}>
+              {selectedKey ? "Bu güne ait konu yok" : "Henüz konu yok"}
+            </p>
+            <p>
+              {selectedKey
+                ? "Takvimden başka bir gün seç ya da yeni bir konu ekle."
+                : "Başlamak için bir ders açıp içine konu ekle."}
+            </p>
             <button
               className={styles.wideButton}
               style={{ marginTop: 20, maxWidth: 220, marginInline: "auto" }}
@@ -164,14 +240,13 @@ export default function HomeDashboard() {
             {queue.map((topic, i) => {
               const icons = sourceIcons(topic);
               const typesPresent = icons.length;
-              const coverage = Math.round((typesPresent / 3) * 100);
               const isEmpty = typesPresent === 0;
 
               return (
                 <div key={topic.id} className={styles.queueRow}>
                   <div className={styles.queueTime}>
                     <span className={styles.queueTimeLabel}>
-                      {MOCK_SLOTS[i % MOCK_SLOTS.length]}
+                      {formatTime(topic.created_at)}
                     </span>
                     {i < queue.length - 1 && <div className={styles.queueLine} />}
                   </div>
@@ -190,7 +265,7 @@ export default function HomeDashboard() {
                     ) : (
                       <div className={styles.card}>
                         <div className={styles.cardMain}>
-                          <CoverageRing value={coverage} />
+                          <CoverageRing present={typesPresent} total={3} />
                           <div className={styles.cardText}>
                             <Tag index={courseIndex.get(topic.course_id) ?? 0}>
                               {topic.course_name}
@@ -225,39 +300,57 @@ export default function HomeDashboard() {
         )}
       </section>
 
-      {/* ── Right rail: calendar + upcoming ───────────────────── */}
+      {/* ── Right rail: calendar + recent ─────────────────────── */}
       <aside className={styles.rail}>
         <section className={styles.panel} style={{ padding: 20 }}>
           <div className={styles.railHeader}>
             <span className={styles.railTitle}>{monthLabel}</span>
             <div style={{ display: "flex", gap: 4 }}>
-              <button className={styles.iconButton} aria-label="Önceki ay" disabled>
+              <button
+                className={styles.iconButton}
+                aria-label="Önceki ay"
+                onClick={() => shiftMonth(-1)}
+              >
                 <ChevronLeft size={13} />
               </button>
-              <button className={styles.iconButton} aria-label="Sonraki ay" disabled>
+              <button
+                className={styles.iconButton}
+                aria-label="Sonraki ay"
+                onClick={() => shiftMonth(1)}
+              >
                 <ChevronRight size={13} />
               </button>
             </div>
           </div>
 
           <div className={styles.calendar}>
-            {WEEKDAYS.map((d, i) => (
-              <span key={i} className={styles.weekday}>
+            {WEEKDAYS.map((d) => (
+              <span key={d} className={styles.weekday}>
                 {d}
               </span>
             ))}
+            {/* Blank cells so the 1st lands under its real weekday. */}
+            {Array.from({ length: leadingBlanks }, (_, i) => (
+              <span key={`blank-${i}`} />
+            ))}
             {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-              const isToday = day === today.getDate();
-              const isSelected = day === selectedDay;
+              const date = new Date(viewMonth.getFullYear(), viewMonth.getMonth(), day);
+              const key = dayKey(date);
+              const added = topicsByDay.get(key)?.length ?? 0;
+              const isToday = key === dayKey(today);
+              const isSelected = key === selectedKey;
+
               return (
                 <button
-                  key={day}
-                  onClick={() => setSelectedDay(day)}
+                  key={key}
+                  onClick={() => setSelectedKey(isSelected ? null : key)}
+                  title={added > 0 ? `${added} konu eklendi` : undefined}
                   className={`${styles.day} ${isToday ? styles.dayToday : ""} ${
                     isSelected ? styles.daySelected : ""
                   }`}
                 >
                   {day}
+                  {added > 0 && <span className={styles.dayDot} />}
                 </button>
               );
             })}
@@ -272,11 +365,11 @@ export default function HomeDashboard() {
             </button>
           </div>
 
-          {upcoming.length === 0 ? (
+          {recent.length === 0 ? (
             <p className={styles.panelSubtitle}>Henüz konu eklenmedi.</p>
           ) : (
             <div className={styles.upcomingList}>
-              {upcoming.map((topic) => (
+              {recent.map((topic) => (
                 <button
                   key={topic.id}
                   className={styles.upcomingCard}

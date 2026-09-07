@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
+import { Plus, Trash2 } from "lucide-react";
 import { getTopics, createTopic, deleteTopic } from "@/lib/api";
 import styles from "./course.module.css";
 
@@ -14,6 +15,18 @@ interface Topic {
     image: number;
   };
 }
+
+/** Konu kağıtları: renk ve eğim sıradan türetiliyor, konum sabit kalıyor. */
+const PAPERS = [
+  { bg: "#EDEAFB", fold: "#D5CDF5", title: "#4B3FAE", meta: "#8A7FD6" },
+  { bg: "#E3F0FC", fold: "#C4DFF5", title: "#2A6FA8", meta: "#5C97C4" },
+  { bg: "#FCEAE3", fold: "#F5CFBC", title: "#B14E31", meta: "#D68868" },
+  { bg: "#E7F4EA", fold: "#C6E5CF", title: "#2F7D4F", meta: "#6BA783" },
+  { bg: "#FBDCE9", fold: "#F3C2D8", title: "#C2447A", meta: "#D782A6" },
+  { bg: "#FCF3DD", fold: "#F0DFAF", title: "#96702A", meta: "#C0A05C" },
+];
+
+const ROTATIONS = ["-2.2deg", "1.6deg", "-1deg", "2deg"];
 
 export default function CourseDetailPage({
   params,
@@ -95,16 +108,8 @@ export default function CourseDetailPage({
       <div className={styles.header}>
         <div>
           <h1>📖 Ders Konuları</h1>
-          <p className={styles.subtitle}>
-            Konu seç veya yeni konu oluştur
-          </p>
+          <p className={styles.subtitle}>Konu seç veya yeni konu oluştur</p>
         </div>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowCreate(!showCreate)}
-        >
-          ➕ Yeni Konu
-        </button>
       </div>
 
       {showCreate && (
@@ -136,63 +141,79 @@ export default function CourseDetailPage({
 
       <div className="label mt-lg">// Konular</div>
 
-      {topics.length === 0 ? (
-        <div className={styles.empty}>
-          <p>📋 Henüz konu yok</p>
-          <p className={styles.emptyHint}>
-            &quot;Yeni Konu&quot; butonuna tıklayarak ilk konunu oluştur
-          </p>
-        </div>
-      ) : (
-        <div className={styles.grid}>
-          {topics.map((topic, i) => (
+      <div className={styles.grid}>
+        {topics.map((topic, i) => {
+          const paper = PAPERS[i % PAPERS.length];
+          const counts = topic.material_counts;
+          const hasMaterial =
+            !!counts?.pdf || !!counts?.audio || !!counts?.image;
+          return (
             <div
               key={topic.id}
-              className={`card card-interactive ${styles.topicCard}`}
-              style={{ animationDelay: `${i * 50}ms` }}
+              className={styles.paper}
+              role="button"
+              tabIndex={0}
+              style={
+                {
+                  "--paper-bg": paper.bg,
+                  "--paper-fold": paper.fold,
+                  "--paper-title": paper.title,
+                  "--paper-meta": paper.meta,
+                  "--rot": ROTATIONS[i % ROTATIONS.length],
+                  animationDelay: `${i * 50}ms`,
+                } as React.CSSProperties
+              }
               onClick={() =>
                 router.push(`/courses/${courseId}/topics/${topic.id}`)
               }
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  router.push(`/courses/${courseId}/topics/${topic.id}`);
+                }
+              }}
             >
-              <div className={styles.cardContent}>
-                <div className="card-title">{topic.name}</div>
-                <div className={styles.badges}>
-                  {topic.material_counts?.pdf > 0 && (
-                    <span className="badge badge-pdf">
-                      📄 {topic.material_counts.pdf} PDF
-                    </span>
-                  )}
-                  {topic.material_counts?.audio > 0 && (
-                    <span className="badge badge-audio">
-                      🎤 {topic.material_counts.audio} Ses
-                    </span>
-                  )}
-                  {topic.material_counts?.image > 0 && (
-                    <span className="badge badge-image">
-                      🖼️ {topic.material_counts.image} Görsel
-                    </span>
-                  )}
-                  {!topic.material_counts?.pdf &&
-                    !topic.material_counts?.audio &&
-                    !topic.material_counts?.image && (
-                      <span className={styles.emptyBadge}>Materyal yok</span>
-                    )}
-                </div>
-              </div>
               <button
-                className="btn btn-icon btn-ghost"
+                className={styles.delBtn}
+                aria-label={`${topic.name} konusunu sil`}
+                title="Konuyu sil"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(topic.id, topic.name);
                 }}
-                title="Konuyu sil"
               >
-                🗑
+                <Trash2 size={12} />
               </button>
+              <div className={styles.paperTitle}>{topic.name}</div>
+              <div className={styles.badges}>
+                {counts?.pdf > 0 && (
+                  <span className={styles.paperBadge}>📄 {counts.pdf}</span>
+                )}
+                {counts?.audio > 0 && (
+                  <span className={styles.paperBadge}>🎤 {counts.audio}</span>
+                )}
+                {counts?.image > 0 && (
+                  <span className={styles.paperBadge}>🖼️ {counts.image}</span>
+                )}
+                {!hasMaterial && (
+                  <span className={styles.emptyBadge}>materyal yok</span>
+                )}
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+
+        <button
+          type="button"
+          className={styles.newCard}
+          onClick={() => setShowCreate(true)}
+        >
+          <span className={styles.newPlus}>
+            <Plus size={15} strokeWidth={2.2} />
+          </span>
+          <span className={styles.newLabel}>yeni konu</span>
+        </button>
+      </div>
     </div>
   );
 }

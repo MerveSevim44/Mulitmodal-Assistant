@@ -326,6 +326,22 @@
   border-color: var(--accent);
 }
 
+/* Marks a day that has topics added to it. */
+.dayDot {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 3px;
+  width: 3px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+}
+
+.daySelected .dayDot {
+  background: var(--text-on-accent);
+}
+
 .daySelected:hover {
   background: var(--accent-dark);
 }
@@ -430,4 +446,12 @@
   margin-top: 4px;
   font-size: 11px;
   color: var(--text-muted);
+}
+
+/* Library totals straight from /overview, under the panel title. */
+.stats {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, var(--text-muted));
 }

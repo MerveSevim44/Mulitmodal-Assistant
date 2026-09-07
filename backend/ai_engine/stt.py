@@ -37,8 +37,22 @@ def _find_ffmpeg() -> str:
     )
 
 
+_pydub_configured = False
+
+
 def _configure_pydub():
-    """Configure pydub to use the correct ffmpeg binary."""
+    """
+    Point pydub at the right ffmpeg binary.
+
+    Called lazily, on the first transcription rather than at import time: a
+    missing ffmpeg used to raise while this module was being imported, and
+    since `ai_engine.ingest` imports it at the top, that took PDF and image
+    ingestion down with it instead of failing only the audio path.
+    """
+    global _pydub_configured
+    if _pydub_configured:
+        return
+
     ffmpeg_path = os.environ.get("FFMPEG_PATH") or _find_ffmpeg()
     ffmpeg_dir = os.path.dirname(ffmpeg_path)
 
@@ -52,12 +66,20 @@ def _configure_pydub():
     if ffmpeg_dir not in os.environ.get("PATH", ""):
         os.environ["PATH"] += os.pathsep + ffmpeg_dir
 
+    _pydub_configured = True
 
-# Configure on import
-_configure_pydub()
+# Groq's default client timeout is 10 minutes, which outlives the frontend's
+# own timeout — a stalled request left the browser waiting on a call the
+# server was still holding open. Capped below the client budget so a hang
+# surfaces as an error the user can see.
+TRANSCRIBE_TIMEOUT = float(os.getenv("GROQ_TRANSCRIBE_TIMEOUT", "600"))
+
+# Groq rejects transcription uploads above 25MB. At the 32kbps mono we encode,
+# that is roughly 1.8 hours of audio.
+MAX_UPLOAD_MB = 24.0
 
 # Initialize Groq client
-_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+_client = Groq(api_key=os.getenv("GROQ_API_KEY"), timeout=TRANSCRIBE_TIMEOUT)
 
 
 def transcribe_audio(
@@ -79,9 +101,17 @@ def transcribe_audio(
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Audio file not found: {file_path}")
 
+    _configure_pydub()
+
     # Compress audio: mono, low bitrate for faster upload
     print(f"Preparing audio: {os.path.basename(file_path)}")
-    audio = AudioSegment.from_file(file_path)
+    try:
+        audio = AudioSegment.from_file(file_path)
+    except Exception as e:
+        raise RuntimeError(
+            f"Ses dosyası okunamadı ({os.path.basename(file_path)}). "
+            f"ffmpeg kurulu ve biçim destekli olmalı. Ayrıntı: {e}"
+        ) from e
     audio = audio.set_frame_rate(16000).set_channels(1)
 
     # Save as temporary mp3
@@ -90,6 +120,14 @@ def transcribe_audio(
 
     size_mb = os.path.getsize(temp_path) / (1024 * 1024)
     print(f"Compressed size: {size_mb:.1f}MB")
+
+    if size_mb > MAX_UPLOAD_MB:
+        os.remove(temp_path)
+        raise ValueError(
+            f"Ses kaydı çok uzun ({len(audio) / 60000:.0f} dakika, "
+            f"sıkıştırılmış {size_mb:.0f}MB). Transkripsiyon servisi en fazla "
+            f"{MAX_UPLOAD_MB:.0f}MB kabul ediyor; kaydı bölerek yükleyin."
+        )
 
     try:
         with open(temp_path, "rb") as f:

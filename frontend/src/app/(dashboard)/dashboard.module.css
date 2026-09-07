@@ -151,11 +151,24 @@
   gap: 8px;
 }
 
+/* Profil sayfasına kısayol — buton, ama sidebar'daki satır görünümünü korur. */
 .userInfo {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 4px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.userInfo:hover {
+  background: var(--accent-soft);
 }
 
 .avatar {

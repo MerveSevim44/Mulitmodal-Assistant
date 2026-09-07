@@ -2,6 +2,7 @@
 AI Pipeline — core question-answering engine with streaming support.
 Migrated from week2_multimodal/pipeline.py — async, streaming, no Streamlit deps.
 """
+import asyncio
 import os
 import json
 from typing import AsyncGenerator, Optional
@@ -250,8 +251,15 @@ async def stream_pipeline(
     """
     history = history or []
 
-    contexts, image_files = build_contexts(
-        question, course_id=course_id, topic_id=topic_id, image_path=image_path
+    # Retrieval embeds the question, queries Chroma and may run vision/STT —
+    # all synchronous and slow. Off the event loop it goes, so a chat request
+    # in flight does not stall every other request the server is serving.
+    contexts, image_files = await asyncio.to_thread(
+        build_contexts,
+        question,
+        course_id=course_id,
+        topic_id=topic_id,
+        image_path=image_path,
     )
     if image_files_out is not None:
         image_files_out.extend(image_files)

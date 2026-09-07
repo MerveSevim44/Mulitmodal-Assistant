@@ -2,6 +2,7 @@
 Chat API router.
 Streaming chat with Server-Sent Events (SSE) and chat history management.
 """
+import asyncio
 import json
 import time
 import os
@@ -36,8 +37,11 @@ async def chat_stream(
     The user message and full assistant response are saved to chat_messages
     after streaming completes.
     """
-    # Verify ownership
-    topic = repo.get_topic(topic_id)
+    # Verify ownership. Every repository call is blocking network I/O, so it
+    # is pushed to a worker thread — this endpoint is async (it returns a
+    # streaming response), and anything blocking here stalls the whole event
+    # loop, which is what made concurrent requests time out.
+    topic = await asyncio.to_thread(repo.get_topic, topic_id)
     if not topic:
         raise HTTPException(status_code=404, detail="Topic not found")
     if topic.get("courses", {}).get("user_id") != user_id:
@@ -46,7 +50,7 @@ async def chat_stream(
     course_id = topic["course_id"]
 
     # Load conversation history for context
-    existing_messages = repo.list_messages(topic_id)
+    existing_messages = await asyncio.to_thread(repo.list_messages, topic_id)
     history = []
     for msg in existing_messages[-10:]:  # Last 5 turns (10 messages)
         if msg["role"] == "user":
@@ -61,7 +65,8 @@ async def chat_stream(
     if body.include_audio and body.audio_path:
         metadata["audio"] = body.audio_path
 
-    repo.create_message(
+    await asyncio.to_thread(
+        repo.create_message,
         topic_id=topic_id,
         role="user",
         content=body.message,
@@ -93,7 +98,7 @@ async def chat_stream(
             # see what is being described. Only when the answer cites them —
             # retrieval always returns its nearest neighbours, relevant or not.
             images = (
-                _resolve_images(repo, topic_id, image_files)
+                await asyncio.to_thread(_resolve_images, repo, topic_id, image_files)
                 if sources["image"]
                 else []
             )
@@ -103,7 +108,8 @@ async def chat_stream(
 
             # Save assistant response to database. Storage paths are persisted
             # rather than signed URLs, which expire; they are signed on read.
-            repo.create_message(
+            await asyncio.to_thread(
+                repo.create_message,
                 topic_id=topic_id,
                 role="assistant",
                 content=full_response,
@@ -115,7 +121,8 @@ async def chat_stream(
             yield f"data: {json.dumps({'error': error_msg, 'done': True})}\n\n"
 
             # Save error as assistant message
-            repo.create_message(
+            await asyncio.to_thread(
+                repo.create_message,
                 topic_id=topic_id,
                 role="assistant",
                 content=f"❌ {error_msg}",
@@ -133,7 +140,7 @@ async def chat_stream(
 
 
 @router.get("/topics/{topic_id}/chat/history", response_model=ChatHistoryResponse)
-async def get_chat_history(
+def get_chat_history(
     topic_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),
@@ -155,7 +162,7 @@ async def get_chat_history(
 
 
 @router.delete("/topics/{topic_id}/chat/history", status_code=204)
-async def clear_chat_history(
+def clear_chat_history(
     topic_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),

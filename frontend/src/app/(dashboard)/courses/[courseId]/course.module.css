@@ -27,33 +27,163 @@
   flex: 1;
 }
 
+/* ── Konu panosu: her konu masaya bırakılmış bir kağıt ───────── */
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 28px 22px;
+  padding: 6px 4px 12px;
 }
 
-.topicCard {
+.paper {
+  position: relative;
+  aspect-ratio: 3 / 3.5;
+  border-radius: 6px 6px 10px 10px;
+  padding: 20px 16px 16px;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: var(--paper-bg);
+  box-shadow:
+    0 1px 2px rgba(35, 27, 59, 0.06),
+    0 8px 18px rgba(108, 76, 245, 0.12);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
   animation: fadeIn 0.4s ease-out both;
 }
 
-.cardContent {
-  flex: 1;
+/* Kıvrık köşe. */
+.paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 22px 22px 0;
+  border-radius: 0 6px 0 0;
+  border-color: transparent var(--paper-fold) transparent transparent;
+}
+
+.paper:hover,
+.paper:focus-visible {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow:
+    0 4px 8px rgba(35, 27, 59, 0.08),
+    0 16px 28px rgba(108, 76, 245, 0.22);
+  outline: none;
+}
+
+.paperTitle {
+  font-family: 'Caveat', var(--font-sans);
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 1.1;
+  color: var(--paper-title);
+  margin-bottom: 8px;
+  word-break: break-word;
 }
 
 .badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
+  gap: 5px;
+}
+
+.paperBadge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--paper-meta);
 }
 
 .emptyBadge {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--paper-meta);
+  opacity: 0.75;
+}
+
+.delBtn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.paper:hover .delBtn,
+.delBtn:focus-visible {
+  opacity: 1;
+}
+
+.delBtn:hover {
+  color: var(--error);
+}
+
+/* Yeni konu: henüz yazılmamış boş sayfa. */
+.newCard {
+  aspect-ratio: 3 / 3.5;
+  width: 100%;
+  padding: 0;
+  font-family: inherit;
+  border: 1.5px dashed #D9D3F5;
+  border-radius: var(--radius-md);
+  background: var(--bg-soft);
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.newCard:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.newPlus {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.newCard:hover .newPlus {
+  background: var(--bg-tertiary);
+}
+
+.newLabel {
+  font-family: 'Caveat', var(--font-sans);
+  font-weight: 700;
+  font-size: 21px;
 }
 
 .empty {

@@ -8,7 +8,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from app.middleware.auth import get_current_user_id
 from app.db.repository import get_repository, Repository
-from app.models.material import MaterialResponse, MaterialListResponse, MaterialUploadResponse
+from app.models.material import (
+    MaterialResponse,
+    MaterialListResponse,
+    MaterialUploadResponse,
+    MaterialLibraryItem,
+    MaterialLibraryResponse,
+)
 from app.config import get_settings
 from app.db.supabase import get_supabase_admin
 
@@ -21,8 +27,53 @@ class ProcessMaterialRequest(BaseModel):
     bucket: str
 
 
+@router.get("", response_model=MaterialLibraryResponse)
+def list_all_materials(
+    user_id: str = Depends(get_current_user_id),
+    repo: Repository = Depends(get_repository),
+):
+    """
+    Every material the user has uploaded, across all courses and topics.
+
+    Feeds the standalone "Materyaller" page, which is a flat view of the
+    library rather than the per-topic sidebar.
+    """
+    rows = repo.list_all_materials(user_id)
+
+    items: list[MaterialLibraryItem] = []
+    counts = {"pdf": 0, "audio": 0, "image": 0}
+
+    for row in rows:
+        topic = row.get("topics") or {}
+        course = topic.get("courses") or {}
+        if row.get("type") in counts:
+            counts[row["type"]] += 1
+        items.append(
+            MaterialLibraryItem(
+                id=row["id"],
+                type=row["type"],
+                file_name=row["file_name"],
+                storage_path=row["storage_path"],
+                chunk_count=row.get("chunk_count") or 0,
+                created_at=row["created_at"],
+                topic_id=topic.get("id") or row["topic_id"],
+                topic_name=topic.get("name") or "",
+                course_id=course.get("id") or topic.get("course_id"),
+                course_name=course.get("name") or "",
+            )
+        )
+
+    return MaterialLibraryResponse(
+        materials=items,
+        total=len(items),
+        pdf_count=counts["pdf"],
+        audio_count=counts["audio"],
+        image_count=counts["image"],
+    )
+
+
 @router.get("/topics/{topic_id}/materials", response_model=MaterialListResponse)
-async def list_materials(
+def list_materials(
     topic_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),
@@ -42,7 +93,7 @@ async def list_materials(
 
 
 @router.post("/topics/{topic_id}/materials/process", response_model=MaterialUploadResponse, status_code=201)
-async def process_material(
+def process_material(
     topic_id: str,
     body: ProcessMaterialRequest,
     user_id: str = Depends(get_current_user_id),
@@ -91,7 +142,7 @@ async def process_material(
             from ai_engine.ingest import ingest_image
             chunk_count = ingest_image(local_path, course_name, course_id, topic_name, topic_id)
         else:
-            raise HTTPException(status_code=400, detail="Invalid material type")
+            raise ValueError(f"Invalid material type: {body.type}")
             
         # 3. Record in database
         material = repo.create_material(
@@ -109,6 +160,8 @@ async def process_material(
             chunk_count=chunk_count,
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
     finally:
@@ -118,7 +171,7 @@ async def process_material(
 
 
 @router.delete("/{material_id}", status_code=204)
-async def delete_material(
+def delete_material(
     material_id: str,
     user_id: str = Depends(get_current_user_id),
     repo: Repository = Depends(get_repository),

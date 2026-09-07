@@ -151,6 +151,27 @@ class Repository:
         )
         return response.data
 
+    def list_all_materials(self, user_id: str) -> list[dict]:
+        """
+        Every material the user owns, newest first, with the topic and course
+        it belongs to.
+
+        One nested request instead of a materials call per topic — the
+        materials library page needs the whole set at once, and the join is
+        what lets it group and filter by course without a second round trip.
+        """
+        response = (
+            self.client.table("materials")
+            .select(
+                "*, topics!inner(id, name, course_id, "
+                "courses!inner(id, name, user_id))"
+            )
+            .eq("topics.courses.user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return response.data
+
     def create_material(
         self,
         topic_id: str,
