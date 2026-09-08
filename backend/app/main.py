@@ -17,7 +17,7 @@ if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
 from app.config import get_settings
-from app.routers import health, courses, topics, materials, chat, overview
+from app.routers import health, courses, topics, materials, chat, overview, reviews
 
 
 @asynccontextmanager
@@ -79,6 +79,7 @@ app.include_router(topics.router, prefix=API_PREFIX)
 app.include_router(materials.router, prefix=API_PREFIX)
 app.include_router(chat.router, prefix=API_PREFIX)
 app.include_router(overview.router, prefix=API_PREFIX)
+app.include_router(reviews.router, prefix=API_PREFIX)
 
 
 # ── Root Redirect ──────────────────────────────────────────────

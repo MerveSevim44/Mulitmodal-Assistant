@@ -24,6 +24,7 @@ import styles from "./dashboard.module.css";
  */
 const NAV_ITEMS = [
   { icon: Home, label: "Ana Sayfa", href: "/" },
+  { icon: Brain, label: "Tekrar", href: "/review" },
   { icon: BookOpen, label: "Derslerim", href: "/courses" },
   { icon: CalendarDays, label: "Ders Planı", href: "/plan" },
   { icon: FolderOpen, label: "Materyaller", href: "/materials" },
@@ -39,9 +40,10 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [userEmail, setUserEmail] = useState("");
-  // Topics that actually have material behind them, plus the ones still empty
-  // — the card promises a review, so it should not count empty topics.
-  const [counts, setCounts] = useState<{ ready: number; empty: number } | null>(
+  // What the prompt card reports: how many topics the SM-2 schedule says are
+  // due right now, plus the ones still empty — a topic with no material is
+  // nothing to review yet, so it is called out separately rather than counted.
+  const [counts, setCounts] = useState<{ due: number; empty: number } | null>(
     null
   );
 
@@ -80,10 +82,7 @@ export default function DashboardLayout({
     if (!authed) return;
     getOverview()
       .then(({ data }) =>
-        setCounts({
-          ready: data.total_topics - data.empty_topics,
-          empty: data.empty_topics,
-        })
+        setCounts({ due: data.due_topics, empty: data.empty_topics })
       )
       .catch(() => setCounts(null));
   }, [authed]);
@@ -131,25 +130,25 @@ export default function DashboardLayout({
             <p className={styles.promptTitle}>
               {counts === null
                 ? "Konuların yükleniyor"
-                : counts.ready === 0
+                : counts.due === 0
                 ? "Tekrar edilecek konu yok"
-                : `${counts.ready} konu tekrar bekliyor`}
+                : `${counts.due} konu tekrar bekliyor`}
             </p>
             <p className={styles.promptHint}>
               {counts === null
                 ? "Bir saniye"
-                : counts.ready > 0
+                : counts.due > 0
                 ? "Unutmadan bugün tekrar et"
                 : counts.empty > 0
                 ? `${counts.empty} konuda henüz materyal yok`
-                : "Başlamak için bir ders ekle"}
+                : "Bir sonraki tekrar zamanı gelince burada görünecek"}
             </p>
             <button
               className={styles.promptButton}
-              onClick={() => router.push(counts?.ready ? "/" : "/courses")}
+              onClick={() => router.push(counts?.due ? "/review" : "/courses")}
               disabled={counts === null}
             >
-              {counts?.ready ? "Tekrara Başla" : "Ders Oluştur"}
+              {counts?.due ? "Tekrara Başla" : "Ders Oluştur"}
             </button>
           </div>
 

@@ -2,10 +2,13 @@
 Overview API router.
 Feeds the home dashboard with the whole course/topic/material tree in one call.
 """
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends
 from app.middleware.auth import get_current_user_id
 from app.db.repository import get_repository, Repository
 from app.models.overview import OverviewResponse, CourseOverview, TopicOverview
+from app.services import spaced_repetition as sr
 
 router = APIRouter(prefix="/overview", tags=["overview"])
 
@@ -22,11 +25,13 @@ def get_overview(
     call per course, which is what the home page would otherwise need.
     """
     tree = repo.get_overview_tree(user_id)
+    now = datetime.now(timezone.utc)
 
     courses: list[CourseOverview] = []
     topics: list[TopicOverview] = []
     total_materials = 0
     empty_topics = 0
+    due_topics = 0
 
     for course in tree:
         course_topics = course.get("topics") or []
@@ -50,6 +55,14 @@ def get_overview(
             if not materials:
                 empty_topics += 1
 
+            # Scheduling state travels with the topic so the dashboard can
+            # order its review queue client-side; a topic added before the
+            # spaced-repetition migration reads back as "due now".
+            state = sr.ReviewState.from_row(topic)
+            due = sr.is_due(state, now=now)
+            if due:
+                due_topics += 1
+
             topics.append(
                 TopicOverview(
                     id=topic["id"],
@@ -60,6 +73,14 @@ def get_overview(
                     pdf_count=counts["pdf"],
                     audio_count=counts["audio"],
                     image_count=counts["image"],
+                    last_reviewed_at=state.last_reviewed_at,
+                    next_review_at=state.next_review_at,
+                    ease_factor=round(state.ease_factor, 4),
+                    interval_days=state.interval_days,
+                    repetitions=state.repetitions,
+                    lapses=state.lapses,
+                    due=due,
+                    days_until_due=sr.days_until_due(state, now=now),
                 )
             )
 
@@ -73,4 +94,5 @@ def get_overview(
         total_topics=len(topics),
         total_materials=total_materials,
         empty_topics=empty_topics,
+        due_topics=due_topics,
     )

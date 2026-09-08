@@ -78,7 +78,11 @@ class Repository:
         """
         response = (
             self.client.table("courses")
-            .select("id, name, created_at, topics(id, name, created_at, materials(type))")
+            .select(
+                "id, name, created_at, "
+                "topics(id, name, created_at, last_reviewed_at, next_review_at, "
+                "ease_factor, interval_days, repetitions, lapses, materials(type))"
+            )
             .eq("user_id", user_id)
             .order("created_at", desc=True)
             .execute()
@@ -137,6 +141,84 @@ class Repository:
             .execute()
         )
         return len(response.data) > 0
+
+    # ── SPACED REPETITION ───────────────────────────────────────
+
+    def list_review_queue(self, user_id: str) -> list[dict]:
+        """
+        Every topic the user owns, ordered by when it is next due.
+
+        One nested request, the same shape `get_overview_tree` uses: the
+        review screen needs the course name and the material types alongside
+        the schedule, and ordering happens in Postgres so the caller can just
+        take the head of the list.
+        """
+        response = (
+            self.client.table("topics")
+            .select(
+                "id, name, course_id, created_at, last_reviewed_at, "
+                "next_review_at, ease_factor, interval_days, repetitions, lapses, "
+                "courses!inner(id, name, user_id), materials(type)"
+            )
+            .eq("courses.user_id", user_id)
+            .order("next_review_at", desc=False)
+            .execute()
+        )
+        return response.data
+
+    def update_review_state(self, topic_id: str, state: dict) -> Optional[dict]:
+        """Write a topic's new scheduling state (the payload from
+        `ReviewState.to_update()`)."""
+        response = (
+            self.client.table("topics")
+            .update({**state, "updated_at": "now()"})
+            .eq("id", topic_id)
+            .execute()
+        )
+        return response.data[0] if response.data else None
+
+    def log_review(
+        self,
+        topic_id: str,
+        grade: str,
+        quality: int,
+        state: dict,
+        reviewed_at: str,
+    ) -> dict:
+        """
+        Append one graded review to the history.
+
+        Kept separate from `update_review_state` because the topic row only
+        ever holds the *current* schedule; per-topic performance history (and
+        the weak-topic detection built on it) reads this table instead.
+        """
+        response = (
+            self.client.table("topic_reviews")
+            .insert({
+                "topic_id": topic_id,
+                "grade": grade,
+                "quality": quality,
+                "ease_factor": state["ease_factor"],
+                "interval_days": state["interval_days"],
+                "repetitions": state["repetitions"],
+                "next_review_at": state["next_review_at"],
+                "reviewed_at": reviewed_at,
+            })
+            .execute()
+        )
+        return response.data[0]
+
+    def list_reviews(self, topic_id: str, limit: int = 50) -> list[dict]:
+        """A topic's review history, newest first."""
+        response = (
+            self.client.table("topic_reviews")
+            .select("*")
+            .eq("topic_id", topic_id)
+            .order("reviewed_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return response.data
 
     # ── MATERIALS ───────────────────────────────────────────────
 

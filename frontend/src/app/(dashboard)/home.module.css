@@ -455,3 +455,19 @@
   font-weight: 500;
   color: var(--text-secondary, var(--text-muted));
 }
+
+/* ── Spaced repetition ───────────────────────────────────────── */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* An overdue / due-now topic in the review queue. Warning rather than error:
+   a late review is a nudge, not a failure. */
+.queueDue {
+  color: var(--warning);
+  font-weight: 600;
+}

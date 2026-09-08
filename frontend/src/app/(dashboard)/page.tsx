@@ -11,16 +11,25 @@ import {
   Plus,
   Info,
   BookOpen,
+  Brain,
 } from "lucide-react";
 import axios from "axios";
-import { getOverview, type OverviewData, type TopicOverview } from "@/lib/api";
+import {
+  formatDayCount,
+  getOverview,
+  type OverviewData,
+  type TopicOverview,
+} from "@/lib/api";
 import styles from "./home.module.css";
 
 /**
  * The home dashboard is built entirely from /api/v1/overview — courses,
- * topics, material type counts and the topics' created_at timestamps. There is
- * no reviews/schedules table yet, so nothing here invents a review time: the
- * timeline labels are the times the topics were actually added.
+ * topics, material type counts, and each topic's SM-2 schedule.
+ *
+ * The "Tekrar Listesi" is ordered by `next_review_at`, soonest first, so the
+ * top of the list is what the spaced-repetition algorithm says to study now.
+ * Picking a day on the calendar switches the list to "what was added that
+ * day", which is a different question and keeps its own creation-time labels.
  */
 
 // Monday-first, matching Date#getDay() shifted by one.
@@ -148,6 +157,19 @@ export default function HomeDashboard() {
     return map;
   }, [topics]);
 
+  // The review queue: soonest-due first. `next_review_at` is null only for a
+  // topic written before the spaced-repetition migration — those are due now,
+  // so they sort to the front.
+  const reviewQueue = useMemo(
+    () =>
+      [...topics].sort((a, b) => {
+        const at = a.next_review_at ? Date.parse(a.next_review_at) : 0;
+        const bt = b.next_review_at ? Date.parse(b.next_review_at) : 0;
+        return at - bt;
+      }),
+    [topics]
+  );
+
   // Course id -> stable index, so a course keeps the same tag colour.
   const courseIndex = useMemo(() => {
     const map = new Map<string, number>();
@@ -172,6 +194,11 @@ export default function HomeDashboard() {
   const openTopic = (topic: TopicOverview) =>
     router.push(`/courses/${topic.course_id}/topics/${topic.id}`);
 
+  // The review screen starts on this topic but keeps the whole queue behind
+  // it, so finishing one card moves straight on to the next due topic.
+  const openReview = (topic: TopicOverview) =>
+    router.push(`/review?topic=${topic.id}`);
+
   if (loading) {
     return (
       <div className={styles.centered}>
@@ -180,11 +207,16 @@ export default function HomeDashboard() {
     );
   }
 
-  // Default view: the six most recent topics. Pick a day on the calendar and
-  // the list narrows to what was actually added that day.
+  // Default view: the six topics due soonest, in the order SM-2 wants them.
+  // Pick a day on the calendar and the list narrows to what was added that day.
   const selectedDate = selectedKey ? new Date(`${selectedKey}T00:00:00`) : null;
-  const queue = selectedKey ? topicsByDay.get(selectedKey) ?? [] : topics.slice(0, 6);
+  const queue = selectedKey
+    ? topicsByDay.get(selectedKey) ?? []
+    : reviewQueue.slice(0, 6);
   const recent = topics.slice(0, 3);
+  // Counted server-side against the server's clock, so it does not disagree
+  // with the schedule the review endpoint enforces.
+  const dueCount = data?.due_topics ?? 0;
 
   return (
     <div className={styles.board}>
@@ -197,7 +229,9 @@ export default function HomeDashboard() {
           <p className={styles.panelSubtitle}>
             {selectedDate
               ? "Bu gün eklenen konular"
-              : `${formatLongDate(today)} · en son eklenen konular`}
+              : dueCount > 0
+              ? `${formatLongDate(today)} · ${dueCount} konu tekrar bekliyor`
+              : `${formatLongDate(today)} · bugün tekrar bekleyen konu yok`}
           </p>
 
           {data && (
@@ -210,15 +244,26 @@ export default function HomeDashboard() {
 
           <p className={styles.mockNote}>
             <Info size={12} />
-            Saatler konunun eklendiği zamanı, halka ise konudaki kaynak
-            çeşitliliğini gösterir.
+            {selectedDate
+              ? "Bu listede saatler konunun eklendiği zamanı gösterir."
+              : "Sıralama SM-2 aralıklı tekrar algoritmasının hesapladığı tarihlere göre; halka konudaki kaynak çeşitliliğini gösterir."}
           </p>
 
-          {selectedKey && (
-            <button className={styles.linkButton} onClick={() => setSelectedKey(null)}>
-              Tüm konulara dön
-            </button>
-          )}
+          <div className={styles.headerActions}>
+            {!selectedKey && queue.length > 0 && (
+              <button
+                className={styles.darkButton}
+                onClick={() => router.push("/review")}
+              >
+                <Brain size={14} /> Tekrara Başla
+              </button>
+            )}
+            {selectedKey && (
+              <button className={styles.linkButton} onClick={() => setSelectedKey(null)}>
+                Tekrar listesine dön
+              </button>
+            )}
+          </div>
         </header>
 
         {queue.length === 0 ? (
@@ -250,8 +295,23 @@ export default function HomeDashboard() {
               return (
                 <div key={topic.id} className={styles.queueRow}>
                   <div className={styles.queueTime}>
-                    <span className={styles.queueTimeLabel}>
-                      {formatTime(topic.created_at)}
+                    <span
+                      className={`${styles.queueTimeLabel} ${
+                        !selectedKey && topic.due ? styles.queueDue : ""
+                      }`}
+                      title={
+                        selectedKey
+                          ? "Eklenme saati"
+                          : topic.next_review_at
+                          ? `Planlanan tekrar: ${formatLongDate(
+                              new Date(topic.next_review_at)
+                            )}`
+                          : "Henüz tekrar edilmedi"
+                      }
+                    >
+                      {selectedKey
+                        ? formatTime(topic.created_at)
+                        : formatDayCount(topic.days_until_due)}
                     </span>
                     {i < queue.length - 1 && <div className={styles.queueLine} />}
                   </div>
@@ -290,7 +350,7 @@ export default function HomeDashboard() {
                           </div>
                           <button
                             className={styles.darkButton}
-                            onClick={() => openTopic(topic)}
+                            onClick={() => openReview(topic)}
                           >
                             Tekrar Et
                           </button>

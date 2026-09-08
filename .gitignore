@@ -75,6 +75,10 @@ data/
 .cache/
 models/
 model_cache/
+# ...but backend/app/models/ is the Pydantic request/response package,
+# not ML artefacts. Without this the whole package is excluded and a
+# fresh clone cannot import app.main.
+!backend/app/models/
 
 # Jupyter Notebook
 .ipynb_checkpoints
